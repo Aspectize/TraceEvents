@@ -1,0 +1,385 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<diagram xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="623b9985-a145-4106-8d83-ea50cb61ce73" domain="TraceEvents" xmlns="http://schemas.microsoft.com/dsltools/EntityDesigner">
+  <entities>
+    <entity Id="f0ab1596-8df2-486c-8ca4-2ec5682b119e" name="Trace" guid="781bfbd0-fd91-4f5b-8352-4290dd316738" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="DateTrace" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" isIndexed="Desc" />
+        <entityProperty name="Tags" defaultValue="&quot;&quot;" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Who" nullable="true" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="UserAgent" nullable="true" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Longitude" type="Double" nullable="true" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Latitude" type="Double" nullable="true" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Info" nullable="true" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="IndexKey" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" isIndexed="Asc" />
+        <entityProperty name="Value" type="Decimal" nullable="true" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </entity>
+    <entity Id="b6b89692-f637-4d0e-96ab-2c16212ab912" name="Tag" guid="d1091102-5a4d-4e7a-a246-7754c9b40310" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="Name" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="CountTag" type="Int64" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" aggregationChild="TagTrace" />
+        <entityProperty name="SumTag" type="Decimal" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="ValueType" type="EnumTagValueType" defaultValue="NoValue" isCustomType="true" identity="false" isEnumType="true" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Selected" type="Boolean" defaultValue="false" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="MinValue" type="Decimal" mustPersist="false" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="MaxValue" type="Decimal" mustPersist="false" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="GraphMin" type="Decimal" mustPersist="false" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="GraphMax" type="Decimal" mustPersist="false" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="GraphStep" type="Decimal" mustPersist="false" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Unity" nullable="true" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Frequency" type="EnumFrequency" defaultValue="126" isCustomType="true" identity="false" isEnumType="true" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="HasValue" type="Boolean" mustPersist="false" expression="IIF(ValueType = 1, 'true', 'false')" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </entity>
+    <entity Id="566b294c-ab2e-4578-a351-cc3ba44ee0cd" name="Year" guid="4e6aa701-b42b-4941-860f-0f4321757022" guidIdentifier="false" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="Id" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" identifier="Identifier" />
+        <entityProperty name="TimeKey" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="DatePeriod" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="CountYear" type="Int64" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" aggregationChild="TraceYear" />
+        <entityProperty name="SumYear" type="Decimal" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Display" type="Boolean" mustPersist="false" defaultValue="true" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </entity>
+    <entity Id="7020cd61-1e00-4aca-bdc6-e3fad88dc491" name="Month" guid="28ce19a4-515c-48d0-bed5-cfc281c31b86" guidIdentifier="false" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="Id" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" identifier="Identifier" />
+        <entityProperty name="TimeKey" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="DatePeriod" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="CountMonth" type="Int64" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" aggregationChild="TraceMonth" />
+        <entityProperty name="SumMonth" type="Decimal" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Display" type="Boolean" mustPersist="false" defaultValue="true" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </entity>
+    <entity Id="8925a507-4b54-41ee-92e3-272538af895f" name="Day" guid="7e58f93f-c333-41ed-a3e2-3b4246bccfff" guidIdentifier="false" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="Id" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" identifier="Identifier" />
+        <entityProperty name="TimeKey" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="DatePeriod" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="CountDay" type="Int64" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" aggregationChild="TraceDay" />
+        <entityProperty name="SumDay" type="Decimal" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Display" type="Boolean" mustPersist="false" defaultValue="true" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </entity>
+    <entity Id="4b3745b9-8c53-474d-9246-8036df1ac481" name="Hour" guid="1dd8479e-4823-485b-b651-816352f9f58e" guidIdentifier="false" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="Id" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" identifier="Identifier" />
+        <entityProperty name="TimeKey" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="DatePeriod" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="CountHour" type="Int64" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" aggregationChild="TraceHour" />
+        <entityProperty name="SumHour" type="Decimal" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Display" type="Boolean" mustPersist="false" defaultValue="true" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </entity>
+    <entity Id="2f71e686-ff39-4a07-8120-7bad0be4985d" name="Minute" guid="0037bacc-b95a-46ab-ba23-ad355c22ab30" guidIdentifier="false" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="Id" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" identifier="Identifier" />
+        <entityProperty name="TimeKey" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="DatePeriod" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="CountMinute" type="Int64" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" aggregationChild="TraceMinute" />
+        <entityProperty name="SumMinute" type="Decimal" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Display" type="Boolean" mustPersist="false" defaultValue="true" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </entity>
+    <entity Id="97dacf2a-42a8-46ff-a003-2885aea4e469" name="DateFilterTemp" guid="20ea6c52-1678-42a1-b099-9a7e2bdd9d22" mustPersist="false" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="DateStart" type="Date" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="DateEnd" type="Date" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Frequency" type="EnumFrequency" defaultValue="Daily" isCustomType="true" identity="false" isEnumType="true" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="DateNow" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="GridGraph" type="Boolean" defaultValue="true" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </entity>
+    <entity Id="af25bc8a-1063-499f-a29e-d69745ee534a" name="Week" guid="0dac292c-4a23-4bd5-89cc-ecf5d3d97c74" guidIdentifier="false" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="Id" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" identifier="Identifier" />
+        <entityProperty name="TimeKey" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="DatePeriod" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="CountWeek" type="Int64" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" aggregationChild="TraceWeek" />
+        <entityProperty name="SumWeek" type="Decimal" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Display" type="Boolean" mustPersist="false" defaultValue="true" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </entity>
+    <entity Id="adf89d83-d2e0-4630-93f2-ff89f03467fa" name="Quarter" guid="ce01cce2-53e1-4a47-9218-f445c81bb6bc" guidIdentifier="false" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="Id" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" identifier="Identifier" />
+        <entityProperty name="TimeKey" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="DatePeriod" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="CountQuarter" type="Int64" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" aggregationChild="TraceQuarter" />
+        <entityProperty name="SumQuarter" type="Decimal" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Display" type="Boolean" mustPersist="false" defaultValue="true" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </entity>
+    <entity Id="ac50dc20-c8a6-4f8c-bee9-83f991181bbe" name="TagStat" guid="a05da822-e3c5-4621-aa58-1adbee3f3442" mustPersist="false" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="LastMinuteCount" type="Int64" mustPersist="false" defaultValue="0" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="LastMinuteSum" type="Decimal" mustPersist="false" defaultValue="0" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="LastHourCount" type="Int64" mustPersist="false" defaultValue="0" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="LastHourSum" type="Decimal" mustPersist="false" defaultValue="0" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="LastDayCount" type="Int64" mustPersist="false" defaultValue="0" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="LastDaySum" type="Decimal" mustPersist="false" defaultValue="0" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="LastWeekCount" type="Int64" mustPersist="false" defaultValue="0" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="LastWeekSum" type="Decimal" mustPersist="false" defaultValue="0" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="LastMonthCount" type="Int64" mustPersist="false" defaultValue="0" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="LastMonthSum" type="Decimal" mustPersist="false" defaultValue="0" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="LastQuarterCount" type="Int64" mustPersist="false" defaultValue="0" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="LastQuarterSum" type="Decimal" mustPersist="false" defaultValue="0" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="LastYearCount" type="Int64" mustPersist="false" defaultValue="0" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="LastYearSum" type="Decimal" mustPersist="false" defaultValue="0" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </entity>
+    <entity Id="d2f160a9-c8fa-4c23-b206-769991a0ef6a" name="TraceRequest" guid="ff122514-7c1b-49ac-be47-cad86e29de8e" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="DateCreated" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Storage" defaultValue="&quot;&quot;" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Request" defaultValue="&quot;&quot;" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Result" defaultValue="&quot;&quot;" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="TimeSpan" type="Int64" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </entity>
+    <entity Id="44548a82-75df-47a4-8109-1f5f0fbe4469" name="Who" guid="16cb8c5b-b469-4d66-abe2-611113426c8e" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="DateFirstTrace" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="DateLastTrace" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </entity>
+    <entity Id="87ad762a-7093-46b5-8f5c-f225b82525ba" name="Root" guid="2d5f074d-a39a-4436-a4b1-6224a9c6e2af" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="Now" type="DateTime" mustPersist="false" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </entity>
+  </entities>
+  <relations>
+    <relation Id="a258440a-ca93-4c73-a93a-bc6c5c65f7e1" name="TagTrace" guid="00000000-0000-0000-0000-000000000000" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="7625a453-e0da-496c-a469-bf720fd2778a" role="Tag" cardinality="I__I" fkNames="TagId">
+          <entityMoniker Id="b6b89692-f637-4d0e-96ab-2c16212ab912" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="e204a137-21f5-4a66-8219-f90864d9dd3b" role="Trace" cardinality="O__N">
+          <entityMoniker Id="f0ab1596-8df2-486c-8ca4-2ec5682b119e" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="eff4420e-ee3a-461c-ace5-4f47c58cfb88" name="TraceYear" guid="00000000-0000-0000-0000-000000000000" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="f730b57c-1f39-4099-af5e-c2bac0dd2de9" role="Year" cardinality="I__I" fkNames="YearId" sortColumn="IndexKey">
+          <entityMoniker Id="566b294c-ab2e-4578-a351-cc3ba44ee0cd" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="7fb0cfe8-ce80-4fa6-ab0d-df53c7e1d535" role="Trace" cardinality="O__N">
+          <entityMoniker Id="f0ab1596-8df2-486c-8ca4-2ec5682b119e" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="c274fd62-ef9e-4705-929f-ab0a32529786" name="TraceMonth" guid="00000000-0000-0000-0000-000000000000" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="0ebe62c8-e8f5-472c-94e9-9469adfe1dc0" role="Month" cardinality="I__I" fkNames="MonthId" sortColumn="IndexKey">
+          <entityMoniker Id="7020cd61-1e00-4aca-bdc6-e3fad88dc491" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="3a439b9b-efe4-4ef2-b815-91da5245e85a" role="Trace" cardinality="O__N">
+          <entityMoniker Id="f0ab1596-8df2-486c-8ca4-2ec5682b119e" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="4aa10b1a-55f2-4727-b36a-26ea2902104f" name="TraceDay" guid="00000000-0000-0000-0000-000000000000" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="dde78eb6-b6a6-4d55-9d84-e66b492c3372" role="Day" cardinality="I__I" fkNames="DayId" sortColumn="IndexKey">
+          <entityMoniker Id="8925a507-4b54-41ee-92e3-272538af895f" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="3616bad9-3ff9-40fc-958e-fb93d8da2d77" role="Trace" cardinality="O__N">
+          <entityMoniker Id="f0ab1596-8df2-486c-8ca4-2ec5682b119e" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="251482da-5d88-4af5-9aca-1e168980679c" name="TraceHour" guid="00000000-0000-0000-0000-000000000000" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="02ee5973-bfc7-4aca-81d7-23aa29aefba7" role="Hour" cardinality="I__I" fkNames="HourId" sortColumn="IndexKey">
+          <entityMoniker Id="4b3745b9-8c53-474d-9246-8036df1ac481" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="b01bd1b3-466f-41ab-9d11-27292dbdd7da" role="Trace" cardinality="O__N">
+          <entityMoniker Id="f0ab1596-8df2-486c-8ca4-2ec5682b119e" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="fd84088b-89e7-40f5-b00e-6667d23d9b84" name="TraceMinute" guid="00000000-0000-0000-0000-000000000000" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="56a3482a-7d11-44db-8398-3e12f9e0602b" role="Trace" cardinality="O__N">
+          <entityMoniker Id="f0ab1596-8df2-486c-8ca4-2ec5682b119e" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="c3d86fb1-f8e3-4acd-a8f7-398227625329" role="Minute" cardinality="I__I" fkNames="MinuteId">
+          <entityMoniker Id="2f71e686-ff39-4a07-8120-7bad0be4985d" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="91cf3ab5-d42f-44e5-be2d-f243a7ceb392" name="TagMinute" guid="00000000-0000-0000-0000-000000000000" mustPersist="false" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="d9dff2c3-ea49-4cac-9e76-72f187648d91" role="Minute" cardinality="O__N">
+          <entityMoniker Id="2f71e686-ff39-4a07-8120-7bad0be4985d" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="d1071199-3c62-4c14-8ef2-e5323e5c81bd" role="Tag" cardinality="I__I" fkNames="TagId" sortColumn="TimeKey">
+          <entityReferenceMoniker Id="d591a767-f1a3-4c96-a186-a87549a65e51" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="fb6d0838-8d33-46d1-b084-3545d9853cc1" name="TagDay" guid="00000000-0000-0000-0000-000000000000" mustPersist="false" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="0d6a329d-c8f9-4c6f-a49c-1181d9ba3300" role="Day" cardinality="O__N" generateMember="true">
+          <entityMoniker Id="8925a507-4b54-41ee-92e3-272538af895f" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="c639e8d1-56ff-4343-b54e-ef49fe163865" role="Tag" cardinality="I__I" fkNames="TagId" sortColumn="TimeKey">
+          <entityReferenceMoniker Id="d591a767-f1a3-4c96-a186-a87549a65e51" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="04dce582-59e2-452d-ba6f-065be21762af" name="TagMonth" guid="00000000-0000-0000-0000-000000000000" mustPersist="false" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="bc68bc4a-31b7-47d2-b1fe-d429e973d3a2" role="Month" cardinality="O__N" generateMember="true">
+          <entityMoniker Id="7020cd61-1e00-4aca-bdc6-e3fad88dc491" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="61b5f363-ef07-4a9f-b643-6aa55fcf3e29" role="Tag" cardinality="I__I" fkNames="TagId" sortColumn="TimeKey">
+          <entityReferenceMoniker Id="d591a767-f1a3-4c96-a186-a87549a65e51" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="8dd6317b-fa83-496b-8fbb-a2c10f2f71d1" name="TagHour" guid="00000000-0000-0000-0000-000000000000" mustPersist="false" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="6c73a3f2-6344-4161-8d6e-0e422367e3ae" role="Hour" cardinality="O__N" generateMember="true">
+          <entityMoniker Id="4b3745b9-8c53-474d-9246-8036df1ac481" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="a458531a-e98f-4309-931d-ba3c7f44391b" role="Tag" cardinality="I__I" fkNames="TagId" sortColumn="TimeKey">
+          <entityReferenceMoniker Id="d591a767-f1a3-4c96-a186-a87549a65e51" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="d6abffbf-c467-4f3f-bd07-894a91b1e0a9" name="TagYear" guid="00000000-0000-0000-0000-000000000000" mustPersist="false" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="ae55c8fe-fae2-430d-b8b7-9446b8c588cc" role="Tag" cardinality="I__I" fkNames="TagId" sortColumn="TimeKey">
+          <entityReferenceMoniker Id="d591a767-f1a3-4c96-a186-a87549a65e51" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="86b51ed0-22ec-459c-afdf-c3f5c3e8d6e9" role="Year" cardinality="O__N" generateMember="true">
+          <entityMoniker Id="566b294c-ab2e-4578-a351-cc3ba44ee0cd" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="cc39edca-7d6d-4e1a-9177-09f38c184d7a" name="TraceWeek" guid="00000000-0000-0000-0000-000000000000" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="974a62f1-3f50-4d15-9e5c-9fea8b9cec09" role="Week" cardinality="I__I" fkNames="WeekId">
+          <entityMoniker Id="af25bc8a-1063-499f-a29e-d69745ee534a" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="c2394134-4fcf-4c1b-b609-407c41dd05c4" role="Trace" cardinality="O__N">
+          <entityMoniker Id="f0ab1596-8df2-486c-8ca4-2ec5682b119e" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="b5fb22a5-b747-44a8-87d9-29176b69f1bb" name="TagWeek" guid="00000000-0000-0000-0000-000000000000" mustPersist="false" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="1af0d839-dd7c-4bb2-9c99-8e34e762ad75" role="Tag" cardinality="I__I" fkNames="TagId" sortColumn="TimeKey">
+          <entityReferenceMoniker Id="d591a767-f1a3-4c96-a186-a87549a65e51" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="f71e384d-1584-4783-adf0-c2dc35f53851" role="Week" cardinality="O__N" generateMember="true">
+          <entityMoniker Id="af25bc8a-1063-499f-a29e-d69745ee534a" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="b755e481-be20-45b1-9f60-f15d83db889c" name="TagQuarter" guid="00000000-0000-0000-0000-000000000000" mustPersist="false" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="9990f37b-1f4b-4e8e-b28f-7cd9cc02b536" role="Quarter" cardinality="O__N" generateMember="true">
+          <entityMoniker Id="adf89d83-d2e0-4630-93f2-ff89f03467fa" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="8c587bd6-8812-42cd-a7be-ecebbdbf9fb0" role="Tag" cardinality="I__I" fkNames="TagId" sortColumn="TimeKey">
+          <entityReferenceMoniker Id="d591a767-f1a3-4c96-a186-a87549a65e51" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="b48a9a9f-d0ca-40da-a90d-a7959a60ae3c" name="TraceQuarter" guid="00000000-0000-0000-0000-000000000000" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="1a4ad675-2dfd-4c60-817b-37e73352f596" role="Quarter" cardinality="I__I" fkNames="QuarterId">
+          <entityMoniker Id="adf89d83-d2e0-4630-93f2-ff89f03467fa" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="a1bb3e02-d081-4eb5-8dc2-25fca5892d5d" role="Trace" cardinality="O__N">
+          <entityMoniker Id="f0ab1596-8df2-486c-8ca4-2ec5682b119e" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="0ccbcaa0-b053-4728-88d2-1acf7a98febc" name="TagStatTag" guid="00000000-0000-0000-0000-000000000000" mustPersist="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="04389085-ff20-49a6-b756-bd46e67a3115" role="TagStat" cardinality="I__I">
+          <entityMoniker Id="ac50dc20-c8a6-4f8c-bee9-83f991181bbe" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="51f1586b-138b-488a-afd8-00242e1c0660" role="Tag" cardinality="O__I">
+          <entityMoniker Id="b6b89692-f637-4d0e-96ab-2c16212ab912" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="b71b1b1a-fbd0-4d0c-a0e3-3ac2c115216b" name="WhoTrace" guid="00000000-0000-0000-0000-000000000000" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="4d06c413-ba96-4783-9a69-a1127819ea13" role="Who" cardinality="O__I" fkNames="WhoId" sortColumn="DateTrace">
+          <entityMoniker Id="44548a82-75df-47a4-8109-1f5f0fbe4469" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="893dc6d0-0935-4934-915f-6bc87d415af8" role="Trace" cardinality="O__N">
+          <entityMoniker Id="f0ab1596-8df2-486c-8ca4-2ec5682b119e" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="982af04c-abda-46d4-9521-979a3c161c8e" name="RootWho" guid="00000000-0000-0000-0000-000000000000" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="780aec3b-1fde-48c3-8a16-3f5a5c3a025a" role="Root" cardinality="I__I" fkNames="RootId">
+          <entityMoniker Id="87ad762a-7093-46b5-8f5c-f225b82525ba" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="d1098047-84a9-420b-9800-7a638e69598d" role="Who" cardinality="O__N">
+          <entityMoniker Id="44548a82-75df-47a4-8109-1f5f0fbe4469" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="d57b4781-c626-4c4b-a21d-f60244a11b91" name="RootTrace" guid="00000000-0000-0000-0000-000000000000" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="9d5a1788-200b-428a-a4dd-79e4dbfa562d" role="Root" cardinality="I__I" fkNames="RootId" sortColumn="DateTrace">
+          <entityMoniker Id="87ad762a-7093-46b5-8f5c-f225b82525ba" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="61c56c13-3613-4048-baa7-92dba072cdd3" role="Trace" cardinality="O__N">
+          <entityMoniker Id="f0ab1596-8df2-486c-8ca4-2ec5682b119e" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+    <relation Id="6b2f009f-b45b-4780-ad3f-11afffb6a25c" name="RootTag" guid="00000000-0000-0000-0000-000000000000" separateTable="false" hasTriggers="false" hasCustomValidators="false">
+      <entityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="cda94cf4-818a-42c3-8351-cbcf01afcf15" role="Tag" cardinality="O__N" generateMember="true">
+          <entityMoniker Id="b6b89692-f637-4d0e-96ab-2c16212ab912" />
+        </relationReferencesEntityReferenceClasses>
+        <relationReferencesEntityReferenceClasses Id="a9e9e56b-303f-4e98-b575-529f1695ee92" role="Root" cardinality="I__I" fkNames="RootId" sortColumn="Name">
+          <entityMoniker Id="87ad762a-7093-46b5-8f5c-f225b82525ba" />
+        </relationReferencesEntityReferenceClasses>
+      </entityReferenceClasses>
+    </relation>
+  </relations>
+  <enumEntities>
+    <enumEntity Id="0c498250-10bb-4103-8850-3dc5d19d2518" name="EnumTimeUnity">
+      <enumItems>
+        <enumItem name="Minutes" value="0" />
+        <enumItem name="Hour" value="0" />
+        <enumItem name="Day" value="0" />
+        <enumItem name="Month" value="0" />
+      </enumItems>
+    </enumEntity>
+    <enumEntity Id="f6b6f64d-cb10-401f-a64e-e072863eaacc" name="EnumFrequency" flags="true">
+      <enumItems>
+        <enumItem name="Minutely" value="1" description="Minute" />
+        <enumItem name="Hourly" value="2" description="Hour" />
+        <enumItem name="Daily" value="4" description="Day" />
+        <enumItem name="Weekly" value="8" description="Week" />
+        <enumItem name="Monthly" value="16" description="Month" />
+        <enumItem name="Quarterly" value="32" description="Quarter" />
+        <enumItem name="Yearly" value="64" description="Year" />
+      </enumItems>
+    </enumEntity>
+    <enumEntity Id="b773b8e0-3722-4a1d-9cd5-e8f8ad7e8be3" name="EnumTagValueType">
+      <enumItems>
+        <enumItem name="NoValue" value="0" />
+        <enumItem name="Summarize" value="0" />
+        <enumItem name="Discrete" value="0" />
+      </enumItems>
+    </enumEntity>
+  </enumEntities>
+  <entityReferences>
+    <entityReference Id="d591a767-f1a3-4c96-a186-a87549a65e51" name="Tag" />
+  </entityReferences>
+</diagram>

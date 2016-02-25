@@ -1,0 +1,107 @@
+﻿.font18
+{
+    font-size:18px;
+}
+
+.font24
+{
+    font-size:24px;
+}
+
+.font36
+{
+    font-size:36px;
+}
+
+#DashBoardContent-GridName tbody tr,
+#DashBoardContent li.aasRepeaterItem       
+{
+	cursor: pointer;
+}
+
+#DashBoardContent li.aasRepeaterItem:hover
+{
+	background-color: #F5F5F5;
+}
+
+/*
+#DashBoardTagDetail h1 {
+  font-size: 3.9vw;
+}
+*/
+
+#DashBoardHeader .container
+{
+    padding: 10px;
+	border-radius: 6px;
+	background-color: #EEEEEE;
+}
+
+#DashBoardHeader-StartDate,
+#DashBoardHeader-EndDate 
+{
+	width: 200px;
+}
+
+
+.rowTimeElements > div:nth-child(odd)  > .rowTimeElement 
+{
+	/*background: #EEE;*/
+}
+
+.rowTimeElements > div:nth-child(even) > .rowTimeElement 
+{
+	/*background: #CCC;*/
+}
+
+.rowTimeElement
+{
+	border-radius: 6px;
+	margin:3px;
+	background: #0F0F0F;
+	color: #FFF;
+}
+
+.LabelElement
+{
+	font-size:18px;
+	text-align: center;
+}
+
+.ValueElement
+{
+	font-size:24px;
+	text-align: center;
+	padding-top: 5px;
+}
+
+.CountOnlyElement
+{
+	font-size:24px;
+	text-align: center;
+}
+
+.CountElement
+{
+	font-size:14px;
+	text-align: center;
+}
+
+#DashBoardTagDetail-Back
+{
+	text-decoration:none;
+}
+
+.CountBadge {
+    background-color: #999999;
+    border-radius: 10px;
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 3px 7px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    display: inline-block;
+    font-size: 60%;
+    margin-top: 5px;
+}

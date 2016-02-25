@@ -1,0 +1,223 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Untitled</title>
+</head>
+<body>
+
+    <div aas-control="DashBoardTagDetail">
+        <div class="row">
+          <div class="hidden-xs col-xs-1"><h1><a aas-name="Back"  class="glyphicon glyphicon-arrow-left" style="padding-left: 10px;"></a></h1></div>
+          <div class="col-xs-4 col-sm-3" style="padding-left: 20px;"><h1>{TagName}</h1></div>
+          <div class="col-xs-6 col-sm-3 text-right"><h1><div class="label label-danger pull-right">{TagValue}</div></h1></div>
+          <div class="col-xs-1 col-sm-3 text-right {DisplayCount}"><h1><div class="CountBadge">{TagCount}</div></h1></div>
+        </div>
+        
+        <div class="row rowTimeElements" style="padding-bottom: 10px;" class="DisplayNone">
+            <div class="col-xs-6 col-sm-4 col-md-2 paddingleftright5 {ShowThisHour}">
+                <div class="rowTimeElement">
+                    <div class="LabelElement">This Hour&nbsp;<span>({LastHourName})</span></div>
+                    <div class="{HideWhenValue}">
+                        <div class="CountOnlyElement">{LastHourCount}</div>
+                    </div>
+                    <div class="{ShowWhenValue}">
+                        <div class="ValueElement">{LastHourValue}<span class="{ShowUnit}">&nbsp;<span>{TagUnity}</span></span></div>
+                        <div class="CountElement">{LastHourCount}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-2 paddingleftright5 {ShowToday}">
+                <div class="rowTimeElement">
+                    <div class="LabelElement">Today&nbsp;<span>({LastDayName})</span></div>
+                    <div class="{HideWhenValue}">
+                        <div class="CountOnlyElement">{LastDayCount}</div>
+                    </div>
+                    <div class="{ShowWhenValue}">
+                        <div class="ValueElement">{LastDayValue}<span class="{ShowUnit}">&nbsp;<span>{TagUnity}</span></span></div>
+                        <div class="CountElement">{LastDayCount}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-2 paddingleftright5 {ShowThisWeek}">
+                <div class="rowTimeElement">
+                    <div class="LabelElement">This Week&nbsp;<span>({LastWeekName})</span></div>
+                    <div class="{HideWhenValue}">
+                        <div class="CountOnlyElement">{LastWeekCount}</div>
+                    </div>
+                    <div class="{ShowWhenValue}">
+                        <div class="ValueElement">{LastWeekValue}<span class="{ShowUnit}">&nbsp;<span>{TagUnity}</span></span></div>
+                        <div class="CountElement">{LastWeekCount}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-2 paddingleftright5 {ShowThisMonth}">
+                <div class="rowTimeElement">
+                    <div class="LabelElement">This Month&nbsp;<span>({LastMonthName})</span></div>
+                    <div class="{HideWhenValue}">
+                        <div class="CountOnlyElement">{LastMonthCount}</div>
+                    </div>
+                    <div class="{ShowWhenValue}">
+                        <div class="ValueElement">{LastMonthValue}<span class="{ShowUnit}">&nbsp;<span>{TagUnity}</span></span></div>
+                        <div class="CountElement">{LastMonthCount}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-2 paddingleftright5 {ShowThisQuarter}">
+                <div class="rowTimeElement">
+                    <div class="LabelElement">This Quarter&nbsp;<span>({LastQuarterName})</span></div>
+                    <div class="{HideWhenValue}">
+                        <div class="CountOnlyElement">{LastQuarterCount}</div>
+                    </div>
+                    <div class="{ShowWhenValue}">
+                        <div class="ValueElement">{LastQuarterValue}<span class="{ShowUnit}">&nbsp;<span>{TagUnity}</span></span></div>
+                        <div class="CountElement">{LastQuarterCount}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-2 paddingleftright5 {ShowThisYear}">
+                <div class="rowTimeElement">
+                    <div class="LabelElement">This Year&nbsp;<span>({LastYearName})</span></div>
+                    <div class="{HideWhenValue}">
+                        <div class="CountOnlyElement">{LastYearCount}</div>
+                    </div>
+                    <div class="{ShowWhenValue}">
+                        <div class="ValueElement">{LastYearValue}<span class="{ShowUnit}">&nbsp;<span>{TagUnity}</span></span></div>
+                        <div class="CountElement">{LastYearCount}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div aas-name="ZoneHeader" aas-type="Panel" class="Panel"></div>
+    </div>
+    
+    <div aas-control="DashBoardContent">
+        <ul class="list-group">
+            <li class="list-group-item hidden-xs">
+                <div class="col-xs-6 col-sm-3 col-md-2 col-lg-3 font18">&nbsp;</div>
+                <div class="col-xs-5 col-sm-2 col-md-2 col-lg-1 font18 text-right">Total</div>
+                <div class="hidden-xs col-sm-4 col-md-3 col-lg-2 font18 text-right">Today</div>
+                <div class="hidden-xs hidden-sm col-md-3 col-lg-2 font18 text-right">This Week</div>
+                <div class="hidden-xs hidden-sm hidden-md col-lg-2 font18 text-right">This Month</div>
+                <div class="FloatClear"></div>
+            </li>
+            <div aas-name="RepeaterPanelTags" aas-type="AspectizeRepeaterPanel"></div>
+        </ul>
+    </div>
+
+    <div aas-control="TagElement">
+        <li class="list-group-item">
+            <div class="col-xs-6 col-sm-3 col-md-2  col-lg-3 font18">{TagName}</div>
+            <div class="col-xs-5 col-sm-2 col-md-2 col-lg-1"><div class="label label-danger pull-right font18">{TagValue}</div></div>
+            <div class="col-xs-1 col-sm-2 col-md-1 col-lg-1 paddingleft0"><div class="badge pull-left" style="margin-top: 5px">{TagCount}</div></div>
+            <div class="hidden-xs col-sm-2 col-md-2 col-lg-1"><div class="label label-danger pull-right font18">{TagValueDay}</div></div>
+            <div class="hidden-xs col-sm-2 col-md-1 col-lg-1 paddingleft0"><div class="badge pull-left" style="margin-top: 5px">{TagCountDay}</div></div>
+            <div class="hidden-xs hidden-sm col-md-2 col-lg-1"><div class="label label-danger pull-right font18">{TagValueWeek}</div></div>
+            <div class="hidden-xs hidden-sm col-md-1 col-lg-1 paddingleft0"><div class="badge pull-left" style="margin-top: 5px">{TagCountWeek}</div></div>
+            <div class="hidden-xs hidden-sm hidden-md col-lg-1"><div class="label label-danger pull-right font18">{TagValueMonth}</div></div>
+            <div class="hidden-xs hidden-sm hidden-md col-lg-1 paddingleft0"><div class="badge pull-left" style="margin-top: 5px">{TagCountMonth}</div></div>
+            <div class="FloatClear"></div>
+        </li>
+    </div>
+
+    <div aas-control="DashBoardHeader">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-7 col-md-6">
+                    <div style="padding:7px 5px">
+                        <div aas-name='StartDate' aas-type='BootstrapDateTimePicker.BootstrapDateTimePicker' class='input-group date'>
+                            <input type='text' class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="fa fa-calendar"></span>
+                            </span>
+                        </div>
+
+                        <div aas-name='EndDate' aas-type='BootstrapDateTimePicker.BootstrapDateTimePicker' class='input-group date'>
+                            <input type='text' class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="fa fa-calendar"></span>
+                            </span>
+                        </div>
+                        <!--<input name="StartDate" class="JQueryExtension.JQueryDatePicker" readonly="readonly" type="text" style="width:200px" />
+                        <input name="EndDate" class="JQueryExtension.JQueryDatePicker" readonly="readonly" type="text" style="width:200px" />-->
+                        <button class="btn btn-primary" name="RefreshStats" type="submit">Apply</button>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2">
+                    <div class="btn btn-group">
+                      <button type="button" class="active btn btn-sm btn-default" name="Graph"><i class="icon-signal"></i></button>
+                      <button type="button" class="btn btn-sm btn-default" name="Grid"><i class="icon-list"></i></button>
+                    </div>
+
+                </div>
+                <div class="col-xs-12 col-sm-3 col-md-4">
+                    <div class="btn btn-group">
+                      <button type="button" class="btn btn-default" name="Daily">Daily</button>
+                      <button type="button" class="btn btn-default" name="Weekly">Weekly</button>
+                      <button type="button" class="btn btn-default" name="Monthly">Monthly</button>
+                    </div>
+                    <a class="btn btn-success" aas-name="DownloadXLSX" role="button">
+                        Download XLSX
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 {ShowDay}">
+                <div class="{ShowChart}">
+                    <div aas-name="ChartDay" aas-type="Dhtmlx.DhtmlxLineChart"></div>
+                </div>
+                <div class="table-responsive padding20 {ShowGrid}">
+                    <div aas-name="GridDay" aas-type="Bootstrap.BootstrapGrid"></div>
+                </div>
+            </div>
+            <div class="col-xs-12 {ShowWeek}">
+                <div class="{ShowChart}">
+                    <div aas-name="ChartWeek" aas-type="Dhtmlx.DhtmlxLineChart"></div>
+                </div>
+                <div class="table-responsive padding20 {ShowGrid}">
+                    <div aas-name="GridWeek" aas-type="Bootstrap.BootstrapGrid"></div>
+                </div>
+            </div>
+            <div class="col-xs-12 {ShowMonth}">
+                <div class="{ShowChart}">
+                    <div aas-name="ChartMonth" aas-type="Dhtmlx.DhtmlxLineChart"></div>
+                </div>
+                <div class="table-responsive padding20 {ShowGrid}">
+                    <div aas-name="GridMonth" aas-type="Bootstrap.BootstrapGrid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div aas-control="name:'ConfirmationDeleteEvent', isModal:true">
+        <div class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button name="Close" type="button" class="close" aria-hidden="true" data-dismiss="modal">&times;</button>
+                        <h4 class="text-center">Confirmation</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form">
+                            <p class="lead" style="text-align:center">Are you sure you want to delete event <span>{EventName}</span> ?</p>
+
+                            <p class="lead" style="text-align:center">All historic data will be deleted</p>
+                
+		                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" name="Cancel" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" name="Delete">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
+
+
+</body>
+</html>
