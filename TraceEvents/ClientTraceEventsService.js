@@ -54,10 +54,10 @@ Global.ClientTraceEventsService = {
         return getQuarter();
     },
 
-    SelectTag: function (dataSetName, tagId, frequency, minDate, maxDate, graphControlId) {
+    SelectEvents: function (dataSetName, eventsId, frequency, minDate, maxDate, graphControlId) {
         var em = Aspectize.EntityManagerFromContextDataName(dataSetName);
 
-        var tag = em.GetInstance('Tag', { Id: tagId });
+        var events = em.GetInstance('Events', { Id: eventsId });
 
         var enumFrequency = em.GetInstance('EnumFrequency', { EnumerationValue: frequency });
 
@@ -110,11 +110,11 @@ Global.ClientTraceEventsService = {
 
         var graphControlId = graphControlId + '-Chart' + serie;
 
-        var series = tag.GetAssociated('Tag' + serie, serie);
+        var series = events.GetAssociated('Events' + serie, serie);
 
         var column = 'Count';
 
-        if (tag.ValueType == 1) {
+        if (events.ValueType == 1) {
             column = 'Sum';
         }
 
@@ -150,24 +150,24 @@ Global.ClientTraceEventsService = {
             }
         }
 
-        tag.SetField('MinValue', minValue);
-        tag.SetField('MaxValue', maxValue);
+        events.SetField('MinValue', minValue);
+        events.SetField('MaxValue', maxValue);
 
         var dhtmlxChartService = Aspectize.Host.GetService('DhtmlxChartService');
 
-        tag.SetField('GraphMin', dhtmlxChartService.GetGraphBegin(minValue, maxValue));
-        tag.SetField('GraphMax', dhtmlxChartService.GetGraphEnd(minValue, maxValue));
-        tag.SetField('GraphStep', dhtmlxChartService.GetGraphStep(minValue, maxValue));
+        events.SetField('GraphMin', dhtmlxChartService.GetGraphBegin(minValue, maxValue));
+        events.SetField('GraphMax', dhtmlxChartService.GetGraphEnd(minValue, maxValue));
+        events.SetField('GraphStep', dhtmlxChartService.GetGraphStep(minValue, maxValue));
 
         dhtmlxChartService.RefreshGraph(graphControlId);
     },
 
-    GetGraphSerieElement: function (dataSetName, tagId, serie, minDate, maxDate, typeElement) {
+    GetGraphSerieElement: function (dataSetName, eventsId, serie, minDate, maxDate, typeElement) {
         var em = Aspectize.EntityManagerFromContextDataName(dataSetName);
 
-        var tag = em.GetInstance('Tag', { Id: tagId });
+        var events = em.GetInstance('Events', { Id: eventsId });
 
-        var series = tag.GetAssociated('Tag' + serie, serie);
+        var series = events.GetAssociated('Events' + serie, serie);
 
         var minValue; var maxValue;
 

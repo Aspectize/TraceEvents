@@ -101,7 +101,6 @@
   <ItemGroup>
     <Content Include="ClientTraceEventsService.js" />
     <Content Include="DashBoard.htm" />
-    <Content Include="TraceEvents.css" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Aspectize\Aspectize.Targets" />

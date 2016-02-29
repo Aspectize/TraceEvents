@@ -11,18 +11,19 @@ namespace TraceMyApps
 {
     public interface ITrace
     {
-        object Events(string events, string value, Guid? whoId, string longitude, string latitude, string info);
+        void Events(string events, string value, Guid? whoId, string longitude, string latitude, string info);
 
         DataSet LoadTraces();
-        DataSet GetTrace(Date dateStart, Date dateEnd);
-        DataSet GetTagHistory(Guid tagId, Date dateStart, Date dateEnd, EnumFrequency frequency, DateTime lastDateTraceAccount);
- 
+        //DataSet GetTrace(Date dateStart, Date dateEnd);
+        DataSet GetEventsHistory(Guid eventsId, Date dateStart, Date dateEnd, EnumFrequency frequency);
+        void FillSerie();
+
     }
 
     [Service(Name = "TraceEventsConfigurableService", ConfigurationRequired = true)]
     public class TraceService : ITrace, IInitializable//, ISingleton
     {
-        internal static string ExtractFormatDateYear ="yyyy";
+        internal static string ExtractFormatDateYear = "yyyy";
         internal static string ExtractFormatDateQuarter = "yyyyQ";
         internal static string ExtractFormatDateMonth = "yyyyQMM";
         internal static string ExtractFormatDateWeek = "yyyyQMMWW";
@@ -46,100 +47,98 @@ namespace TraceMyApps
             List<IRoleRelationQuery> roleRelationQuerys = new List<IRoleRelationQuery>();
 
             roleRelationQuerys.Add(new RoleRelationQuery<Root, RootTrace>(new PaginationContext(100, "LoadTraces")));
-            roleRelationQuerys.Add(new RoleRelationQuery<Trace, TagTrace>());
+            roleRelationQuerys.Add(new RoleRelationQuery<Trace, EventsTrace>());
 
             dm.LoadEntitiesGraph<Root>(roleRelationQuerys, root.Id);
 
             var now = DateTime.UtcNow;
-            foreach (Tag tag in em.GetAllInstances<Tag>())
+            foreach (Events events in em.GetAllInstances<Events>())
             {
-                BuildTagStat(dm, root.Id, tag, now);
+                BuildStat(dm, root.Id, events, now);
             }
 
             return dm.Data;
         }
 
-        internal static void BuildTagStat(IDataManager dm, Guid rootId, Tag tag, DateTime dateTime)
+        internal static void BuildStat(IDataManager dm, Guid rootId, Events events, DateTime dateTime)
         {
             IEntityManager em = dm as IEntityManager;
 
-            TagStat stat = em.CreateInstance<TagStat>();
+            Stat stat = em.CreateInstance<Stat>();
 
-            stat.Id = tag.Id;
+            stat.Id = events.Id;
 
-            em.AssociateInstance<TagStatTag>(tag, stat);
+            em.AssociateInstance<EventsStat>(events, stat);
 
-            string timeTagKey = TraceService.GetTimeTagKey(rootId, tag.Id, dateTime);
-
-            BuildTagStat<Year, TagYear>(dm, stat, timeTagKey, TraceService.ExtractFormatDateYear);
-            BuildTagStat<Quarter, TagQuarter>(dm, stat, timeTagKey, TraceService.ExtractFormatDateQuarter);
-            BuildTagStat<Month, TagMonth>(dm, stat, timeTagKey, TraceService.ExtractFormatDateMonth);
-            BuildTagStat<Week, TagWeek>(dm, stat, timeTagKey, TraceService.ExtractFormatDateWeek);
-            BuildTagStat<Day, TagDay>(dm, stat, timeTagKey, TraceService.ExtractFormatDateDay);
-            BuildTagStat<Hour, TagHour>(dm, stat, timeTagKey, TraceService.ExtractFormatDateHour);
-            //BuildTagStat<Minute, TagMinute>(dm, stat, timeTagKey, TraceService.ExtractFormatDateMinute);
+            BuildStat<Year, EventsYear>(dm, rootId, events, stat, dateTime, TraceService.ExtractFormatDateYear);
+            BuildStat<Quarter, EventsQuarter>(dm, rootId, events, stat, dateTime, TraceService.ExtractFormatDateQuarter);
+            BuildStat<Month, EventsMonth>(dm, rootId, events, stat, dateTime, TraceService.ExtractFormatDateMonth);
+            BuildStat<Week, EventsWeek>(dm, rootId, events, stat, dateTime, TraceService.ExtractFormatDateWeek);
+            BuildStat<Day, EventsDay>(dm, rootId, events, stat, dateTime, TraceService.ExtractFormatDateDay);
+            BuildStat<Hour, EventsHour>(dm, rootId, events, stat, dateTime, TraceService.ExtractFormatDateHour);
+            //BuildTagStat<Minute, TagMinute>(dm, rootId, events, stat, dateTime, TraceService.ExtractFormatDateMinute);
         }
 
-        internal static void BuildTagStat<T, R>(IDataManager dm, TagStat tag, string timeTagKey, string datePeriodFormat)
+        internal static void BuildStat<T, R>(IDataManager dm, Guid rootId, Events events, Stat stat, DateTime dateTime, string datePeriodFormat)
             where T : Entity, IEntity, IDataWrapper, new()
             where R : DataWrapper, IDataWrapper, IRelation, new()
         {
             IEntityManager em = dm as IEntityManager;
 
-            string periodId = TraceService.GetTimeIdFromTimeTagKey(timeTagKey, datePeriodFormat);
+            string periodId = TraceService.GetTimeIdFromDate(rootId, events.Id, dateTime, datePeriodFormat);
 
             T t = dm.GetEntity<T>(periodId);
 
             if (t != null)
             {
-                //em.AssociateInstance<R>(t, tag);
+                em.AssociateInstance<R>(t, events);
 
                 string periodName = typeof(T).Name;
 
-                string tagColumnName = string.Format("Last{0}Count", periodName);
+                string columnName = string.Format("Last{0}Count", periodName);
                 string periodColumnName = string.Format("Count{0}", periodName);
-                tag.data[tagColumnName] = t.data[periodColumnName];
+                stat.data[columnName] = t.data[periodColumnName];
 
-                tagColumnName = string.Format("Last{0}Sum", periodName);
+                columnName = string.Format("Last{0}Sum", periodName);
                 periodColumnName = string.Format("Sum{0}", periodName);
-                tag.data[tagColumnName] = t.data[periodColumnName];
+                stat.data[columnName] = t.data[periodColumnName];
 
             }
         }
 
 
-        [PrincipalPermission(SecurityAction.Demand, Authenticated = true)]
-        DataSet ITrace.GetTrace(Date dateStart, Date dateEnd)
-        {
-            IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
+        //[PrincipalPermission(SecurityAction.Demand, Authenticated = true)]
+        //DataSet ITrace.GetTrace(Date dateStart, Date dateEnd)
+        //{
+        //    IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
 
-            var root = GetRoot(dm, true);
+        //    var root = GetRoot(dm, true);
 
-            IEntityManager em = dm as IEntityManager;
+        //    IEntityManager em = dm as IEntityManager;
 
-            TimeSpan timeSpan = dateEnd - dateStart;
+        //    TimeSpan timeSpan = dateEnd - dateStart;
 
-            foreach (Tag tag in em.GetAllInstances<Tag>())
-            {
-                string dayStart = TraceService.GetTimeTagKey(root.Id, tag.Id, dateStart);//.Substring(0, 11).PadRight(6, '0');
-                string dayEnd = TraceService.GetTimeTagKey(root.Id, tag.Id, dateEnd.DateTime.AddDays(1)); //.Substring(0, 11).PadRight(6, '0');
-                QueryCriteria qcDay = new QueryCriteria(Day.Fields.Id, ComparisonOperator.GreaterOrEquals, dayStart);
-                qcDay = qcDay.AND(new QueryCriteria(Day.Fields.Id, ComparisonOperator.LessOrEquals, dayEnd));
+        //    foreach (Events events in em.GetAllInstances<Events>())
+        //    {
+        //        string dayStart = TraceService.GetTimeTagKey(root.Id, events.Id, dateStart);//.Substring(0, 11).PadRight(6, '0');
+        //        string dayEnd = TraceService.GetTimeTagKey(root.Id, events.Id, dateEnd.DateTime.AddDays(1)); //.Substring(0, 11).PadRight(6, '0');
+        //        QueryCriteria qcDay = new QueryCriteria(Day.Fields.Id, ComparisonOperator.GreaterOrEquals, dayStart);
+        //        qcDay = qcDay.AND(new QueryCriteria(Day.Fields.Id, ComparisonOperator.LessOrEquals, dayEnd));
 
-                List<Day> tagDays = dm.GetEntities<Day>(qcDay);
+        //        List<Day> tagDays = dm.GetEntities<Day>(qcDay);
 
-                foreach (Day d in tagDays)
-                {
-                    em.AssociateInstance<TagDay>(tag, d);
-                }
-            }
+        //        foreach (Day d in tagDays)
+        //        {
+        //            em.AssociateInstance<EventsDay>(events, d);
+        //        }
+        //    }
 
-            dm.Data.AcceptChanges();
+        //    dm.Data.AcceptChanges();
 
-            return dm.Data;
-        }
+        //    return dm.Data;
+        //}
 
-        DataSet ITrace.GetTagHistory(Guid tagId, Date dateStart, Date dateEnd, EnumFrequency frequency, DateTime lastDateTraceAccount)
+        DataSet ITrace.GetEventsHistory(Guid eventsId, Date dateStart, Date dateEnd, EnumFrequency frequency)
         {
             IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
 
@@ -149,16 +148,16 @@ namespace TraceMyApps
 
             DateTime dateEndTomorrow = dateEnd.DateTime.AddDays(1);
 
-            Tag tag = dm.GetEntity<Tag>(tagId);
+            Events events = dm.GetEntity<Events>(eventsId);
 
-            string dayStart = TraceService.GetTimeTagKey(root.Id, tag.Id, dateStart);
-            string dayEnd = TraceService.GetTimeTagKey(root.Id, tag.Id, dateEndTomorrow);
+            string dayStart = TraceService.GetTimeIdFromDate(root.Id, events.Id, dateStart, TraceService.ExtractFormatDateDay);
+            string dayEnd = TraceService.GetTimeIdFromDate(root.Id, events.Id, dateEndTomorrow, TraceService.ExtractFormatDateDay);
 
-            string weekStart = TraceService.GetTimeIdFromTimeTagKey(dayStart, TraceService.ExtractFormatDateWeek);
-            string weekEnd = TraceService.GetTimeIdFromTimeTagKey(dayEnd, TraceService.ExtractFormatDateWeek);
+            string weekStart = TraceService.GetTimeIdFromDate(root.Id, events.Id, dateStart, TraceService.ExtractFormatDateWeek);
+            string weekEnd = TraceService.GetTimeIdFromDate(root.Id, events.Id, dateEndTomorrow, TraceService.ExtractFormatDateWeek);
 
-            string monthStart = TraceService.GetTimeIdFromTimeTagKey(dayStart, TraceService.ExtractFormatDateMonth);
-            string monthEnd = TraceService.GetTimeIdFromTimeTagKey(dayEnd, TraceService.ExtractFormatDateMonth);
+            string monthStart = TraceService.GetTimeIdFromDate(root.Id, events.Id, dateStart, TraceService.ExtractFormatDateMonth);
+            string monthEnd = TraceService.GetTimeIdFromDate(root.Id, events.Id, dateEndTomorrow, TraceService.ExtractFormatDateMonth);
 
             QueryCriteria qcMonth = new QueryCriteria(Month.Fields.Id, ComparisonOperator.GreaterOrEquals, monthStart);
             qcMonth = qcMonth.AND(new QueryCriteria(Month.Fields.Id, ComparisonOperator.LessOrEquals, monthEnd));
@@ -167,7 +166,7 @@ namespace TraceMyApps
 
             foreach (Month m in tagMonths)
             {
-                em.AssociateInstance<TagMonth>(tag, m);
+                em.AssociateInstance<EventsMonth>(events, m);
             }
 
             QueryCriteria qcWeek = new QueryCriteria(Month.Fields.Id, ComparisonOperator.GreaterOrEquals, weekStart);
@@ -177,17 +176,17 @@ namespace TraceMyApps
 
             foreach (Week w in tagWeeks)
             {
-                em.AssociateInstance<TagWeek>(tag, w);
+                em.AssociateInstance<EventsWeek>(events, w);
             }
 
             QueryCriteria qcDay = new QueryCriteria(Day.Fields.Id, ComparisonOperator.GreaterOrEquals, dayStart);
             qcDay = qcDay.AND(new QueryCriteria(Day.Fields.Id, ComparisonOperator.LessOrEquals, dayEnd));
 
-            List<Day> tagDays = dm.GetEntities<Day>(qcDay);
+            List<Day> days = dm.GetEntities<Day>(qcDay);
 
-            foreach (Day d in tagDays)
+            foreach (Day d in days)
             {
-                em.AssociateInstance<TagDay>(tag, d);
+                em.AssociateInstance<EventsDay>(events, d);
             }
 
             DateTime temp = dateStart.DateTime;
@@ -196,37 +195,37 @@ namespace TraceMyApps
 
             for (var i = 0; i < ts.Days; i++)
             {
-                string tempDayId = TraceService.GetTimeTagKey(root.Id, tagId, temp);
+                string tempDayId = TraceService.GetTimeIdFromDate(root.Id, events.Id, temp, TraceService.ExtractFormatDateDay);
 
-                if (!tag.Day.Exists(item => item.Id == tempDayId))
+                if (!events.Day.Exists(item => item.Id == tempDayId))
                 {
                     Day tempTagDay = em.CreateInstance<Day>();
                     tempTagDay.Id = tempDayId;
-                    tempTagDay.TimeKey = TraceService.GetTimeKey(temp);
+                    tempTagDay.TimeKey = tempDayId.Split('|')[2]; //TraceService.GetTimeKey(temp);
                     tempTagDay.DatePeriod = temp.AddHours(12);
-                    em.AssociateInstance<TagDay>(tag, tempTagDay);
+                    em.AssociateInstance<EventsDay>(events, tempTagDay);
                 }
 
-                string tempWeekId = TraceService.GetTimeIdFromTimeTagKey(tempDayId, TraceService.ExtractFormatDateWeek);
+                string tempWeekId = TraceService.GetTimeIdFromDate(root.Id, events.Id, temp, TraceService.ExtractFormatDateWeek);
 
-                if (!tag.Week.Exists(item => item.Id == tempWeekId))
+                if (!events.Week.Exists(item => item.Id == tempWeekId))
                 {
                     Week tempTagWeek = em.CreateInstance<Week>();
                     tempTagWeek.Id = tempWeekId;
-                    tempTagWeek.TimeKey = TraceService.GetTimeKey(temp);
+                    tempTagWeek.TimeKey = tempWeekId.Split('|')[2]; //TraceService.GetTimeKey(temp);
                     tempTagWeek.DatePeriod = temp.AddHours(12);
-                    em.AssociateInstance<TagWeek>(tag, tempTagWeek);
+                    em.AssociateInstance<EventsWeek>(events, tempTagWeek);
                 }
 
-                string tempMonthId = TraceService.GetTimeIdFromTimeTagKey(tempDayId, TraceService.ExtractFormatDateMonth);
+                string tempMonthId = TraceService.GetTimeIdFromDate(root.Id, events.Id, temp, TraceService.ExtractFormatDateMonth);
 
-                if (!tag.Month.Exists(item => item.Id == tempMonthId))
+                if (!events.Month.Exists(item => item.Id == tempMonthId))
                 {
                     Month tempTagMonth = em.CreateInstance<Month>();
                     tempTagMonth.Id = tempMonthId;
-                    tempTagMonth.TimeKey = TraceService.GetTimeKey(temp);
+                    tempTagMonth.TimeKey = tempMonthId.Split('|')[2]; //TraceService.GetTimeKey(temp);
                     tempTagMonth.DatePeriod = temp.AddHours(12);
-                    em.AssociateInstance<TagMonth>(tag, tempTagMonth);
+                    em.AssociateInstance<EventsMonth>(events, tempTagMonth);
                 }
 
                 temp = temp.AddDays(1);
@@ -238,7 +237,7 @@ namespace TraceMyApps
         }
 
 
-        object ITrace.Events(string events, string value, Guid ? whoId, string longitude, string latitude, string info)
+        void ITrace.Events(string events, string value, Guid? whoId, string longitude, string latitude, string info)
         {
             IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
 
@@ -246,131 +245,61 @@ namespace TraceMyApps
 
             DateTime traceDate = DateTime.UtcNow;
 
-            //List<IRoleRelationQuery> roleRelationQuerys = new List<IRoleRelationQuery>();
+            decimal? decimalValue = null;
 
-            //roleRelationQuerys.Add(new RoleRelationQuery<Key, AccountKey>());
-            //roleRelationQuerys.Add(new RoleRelationQuery<Account, AccountTag>());
+            if (!string.IsNullOrEmpty(value))
+            {
+                decimal decimalValueNonNull;
+                if (decimal.TryParse(value, out decimalValueNonNull))
+                {
+                    decimalValue = decimalValueNonNull;
+                }
+            }
 
-            //dm.LoadEntitiesGraph<Key>(roleRelationQuerys, accountKey);
+            Root root = GetRoot(dm, true);
 
-            //Key key = em.GetInstance<Key>(accountKey);
+            Who who = null;
 
-            //if (key != null)
-            //{
-            //    Account account = key.Account;
+            if (!whoId.HasValue)
+            {
+                whoId = Guid.Empty;
+            }
+            who = dm.GetEntity<Who>(whoId.Value);
 
-            //    if (account != null)
-            //    {
-            //        if (!account.DateFirstTrace.HasValue)
-            //        {
-            //            account.DateFirstTrace = traceDate;
-            //        }
+            if (who == null)
+            {
+                who = em.CreateInstance<Who>();
 
-            //        account.DateLastTrace = traceDate;
+                who.Id = whoId.Value;
 
-            //        if (!key.Disable)
-            //        {
-                        decimal? decimalValue = null;
+                em.AssociateInstance<RootWho>(who, root);
+            }
 
-                        if (!string.IsNullOrEmpty(value))
-                        {
-                            decimal decimalValueNonNull;
-                            if (decimal.TryParse(value, out decimalValueNonNull))
-                            {
-                                decimalValue = decimalValueNonNull;
-                            }
-                            //else
-                            //{
-                            //    error = BuildAccountError(dm, account, string.Format("Value {0} is not in correct format", values));
-                            //}
-                        }
+            who.DateLastTrace = DateTime.UtcNow;
 
-                        //if (error == null)
-                        //{
+            string[] eventslist = events.Split('|');
 
-                        Root root = GetRoot(dm, true);
-
-                        Who who = null;
-
-                        if (!whoId.HasValue)
-                        {
-                            whoId = Guid.Empty;
-                        }
-                            who = dm.GetEntity<Who>(whoId.Value);
-
-                            if (who == null)
-                            {
-                                who = em.CreateInstance<Who>();
-
-                                who.Id = whoId.Value;
-
-                                em.AssociateInstance<RootWho>(who, root);
-                            }
-
-                            who.DateLastTrace = DateTime.UtcNow;
-                        
-                            string[] eventslist = events.Split('|');
-
-                            string dateKey = GetTimeKey(traceDate);
-
-                            foreach (string eventName in eventslist)
-                            {
-                                BuildTrace(root, events, decimalValue, who, null, null, info, dm, traceDate, dateKey, eventName.Trim());
-                            }
-                        //}
-            //        }
-            //        else
-            //        {
-            //            error = BuildAccountError(dm, account, string.Format("Key {0} is disabled", accountKey));
-            //        }
-            //    }
-            //    else
-            //    {
-            //        error = BuildAccountError(dm, null, string.Format("Account {0} is unknown", accountKey));
-            //    }
-            //}
-            //else
-            //{
-            //    error = BuildAccountError(dm, null, string.Format("Key {0} is unknown", accountKey));
-            //}
+            foreach (string eventName in eventslist)
+            {
+                BuildTrace(root, decimalValue, who, null, null, info, dm, traceDate, eventName.Trim());
+            }
 
             dm.SaveTransactional();
-
-            Dictionary<string, object> result = new Dictionary<string, object>();
-
-            //if (error != null)
-            //{
-            //    result.Add("trace", "error");
-            //    result.Add("errors", error.Description);
-            //}
-            //else
-            //{
-            //    result.Add("trace", "success");
-            //}
-
-            return result;
         }
 
-        internal static string GetTimeIdFromTimeTagKey(string tagTimeTagKey, string extractFormat)
+        internal static string GetTimeIdFromDate(Guid rootId, Guid eventsId, DateTime dateTime, string extractFormat)
         {
-            string[] parts = tagTimeTagKey.Split('|');
-
-            parts[2] = parts[2].Substring(0, extractFormat.Length).PadRight(ExtractFormatDateFull.Length, '0');
+            var timeKey = GetTimeKey(dateTime).Substring(0, extractFormat.Length).PadRight(ExtractFormatDateFull.Length, '0');
 
             // Bug pour les Week: un même numéro de Week peut se retrouver sur 2 mois...
             if (extractFormat == ExtractFormatDateWeek)
             {
-                parts[2] = parts[2].Substring(0, 4) + "000" + parts[2].Substring(7, 10);
+                timeKey = timeKey.Substring(0, 4) + "000" + timeKey.Substring(7, 10);
             }
 
-            return string.Join("|", parts);
-        }
-
-        internal static string GetTimeTagKey(Guid accountId, Guid tagId, DateTime date)
-        {
-            return string.Format("{0:N}|{1:N}|{2}", accountId, tagId, GetTimeKey(date));
-        }
-
+            return string.Format("{0:N}|{1:N}|{2}", rootId, eventsId, timeKey);
+        }        
+ 
         internal static string GetTimeKey(DateTime date)
         {
             int quarter = GetNumQuarter(date);
@@ -383,7 +312,7 @@ namespace TraceMyApps
         internal static int GetNumQuarter(DateTime date)
         {
             int quarter = (int)((date.Month - 1) / 3) + 1;
-            
+
             return quarter;
         }
 
@@ -391,86 +320,85 @@ namespace TraceMyApps
         {
             System.Globalization.CultureInfo cul = System.Globalization.CultureInfo.InvariantCulture;
 
-            int weekNum = cul.Calendar.GetWeekOfYear(date, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-            
+            int weekNum = cul.Calendar.GetWeekOfYear(date, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+
             return weekNum;
         }
 
-        internal static void BuildTrace(Root root, string events, decimal? value, Who who, double? longitude, double? latitude, string info, IDataManager dm, DateTime traceDate, string dateKey, string tagName)
+        internal static void BuildTrace(Root root, decimal? value, Who who, double? longitude, double? latitude, string info, IDataManager dm, DateTime traceDate, string tagName)
         {
             IEntityManager em = dm as IEntityManager;
-            
-            Tag tag = root.Tag.Find(item => item.Name == tagName);
 
-            if (tag == null)
+            Events existingEvents = root.Events.Find(item => item.Name == tagName);
+
+            if (existingEvents == null)
             {
-                tag = em.CreateInstance<Tag>();
+                existingEvents = em.CreateInstance<Events>();
 
-                tag.Name = tagName;
+                existingEvents.Name = tagName;
 
                 if (value.HasValue)
                 {
-                    tag.ValueType = EnumTagValueType.Summarize;
+                    existingEvents.ValueType = EnumTagValueType.Summarize;
                 }
 
-                em.AssociateInstance<RootTag>(root, tag);
+                em.AssociateInstance<RootEvents>(root, existingEvents);
             }
 
             Trace trace = em.CreateInstance<Trace>();
 
             trace.DateTrace = traceDate;
-            trace.Tags = events;
             trace.Value = value;
-            trace.Who = who.Id.ToString("N");
+            trace.Who = (who != null) ? who.Id.ToString("N") : "";
             trace.Longitude = longitude;
             trace.Latitude = latitude;
             trace.Info = info;
-            
+
             if (HttpContext.Current != null && HttpContext.Current.Request != null)
             {
                 trace.UserAgent = HttpContext.Current.Request.UserAgent;
             }
 
-            trace.IndexKey = string.Format("{0:N}|{1:N}|{2}", root.Id, tag.Id, dateKey);
+            trace.IndexKey = string.Format("{0:N}|{1:N}|{2}", root.Id, existingEvents.Id, GetTimeKey(traceDate)); //GetTimeTagKey(root.Id, existingEvents.Id, traceDate);
 
             if (value.HasValue)
             {
-                tag.SumTag += value.Value;
+                existingEvents.SumEvents += value.Value;
             }
 
             int quarter = GetNumQuarter(traceDate);
 
-            //BuildPeriod<Minute, TraceMinute>(dm, traceDate, trace, new DateTime(traceDate.Year, traceDate.Month, traceDate.Day, traceDate.Hour, traceDate.Minute, 0), ExtractFormatDateMinute);
-            BuildPeriod<Hour, TraceHour>(dm, traceDate, trace, new DateTime(traceDate.Year, traceDate.Month, traceDate.Day, traceDate.Hour, 0, 0), ExtractFormatDateHour);
-            BuildPeriod<Day, TraceDay>(dm, traceDate, trace, new DateTime(traceDate.Year, traceDate.Month, traceDate.Day, 12, 0, 0), ExtractFormatDateDay);
+            //BuildPeriod<Minute, TraceMinute>(dm, trace, new DateTime(traceDate.Year, traceDate.Month, traceDate.Day, traceDate.Hour, traceDate.Minute, 0), ExtractFormatDateMinute);
+            BuildPeriod<Hour, TraceHour>(dm, root.Id, existingEvents.Id, trace, new DateTime(traceDate.Year, traceDate.Month, traceDate.Day, traceDate.Hour, 0, 0), ExtractFormatDateHour);
+            BuildPeriod<Day, TraceDay>(dm, root.Id, existingEvents.Id, trace, new DateTime(traceDate.Year, traceDate.Month, traceDate.Day, 12, 0, 0), ExtractFormatDateDay);
 
             DayOfWeek dayOfWeek = traceDate.DayOfWeek;
-            int dayFromMonday = ((int)dayOfWeek -1) % 7;
+            int dayFromMonday = ((int)dayOfWeek - 1) % 7;
+            if (dayFromMonday < 0) dayFromMonday += 7;
             DateTime weekDate = traceDate.AddDays(-dayFromMonday);
             weekDate = weekDate.AddTicks(-(traceDate.Ticks % TimeSpan.TicksPerDay));
             weekDate = weekDate.AddHours(12);
 
-            BuildPeriod<Week, TraceWeek>(dm, traceDate, trace, weekDate, ExtractFormatDateWeek);
-            BuildPeriod<Month, TraceMonth>(dm, traceDate, trace, new DateTime(traceDate.Year, traceDate.Month, 1, 12, 0, 0), ExtractFormatDateMonth);
-            BuildPeriod<Quarter, TraceQuarter>(dm, traceDate, trace, new DateTime(traceDate.Year, 3 * (quarter - 1) + 1, 1, 12, 0, 0), ExtractFormatDateQuarter);
-            BuildPeriod<Year, TraceYear>(dm, traceDate, trace, new DateTime(traceDate.Year, 1, 1, 12, 0, 0), ExtractFormatDateYear);
+            BuildPeriod<Week, TraceWeek>(dm, root.Id, existingEvents.Id, trace, weekDate, ExtractFormatDateWeek);
+            BuildPeriod<Month, TraceMonth>(dm, root.Id, existingEvents.Id, trace, new DateTime(traceDate.Year, traceDate.Month, 1, 12, 0, 0), ExtractFormatDateMonth);
+            BuildPeriod<Quarter, TraceQuarter>(dm, root.Id, existingEvents.Id, trace, new DateTime(traceDate.Year, 3 * (quarter - 1) + 1, 1, 12, 0, 0), ExtractFormatDateQuarter);
+            BuildPeriod<Year, TraceYear>(dm, root.Id, existingEvents.Id, trace, new DateTime(traceDate.Year, 1, 1, 12, 0, 0), ExtractFormatDateYear);
 
-            em.AssociateInstance<TagTrace>(trace, tag);
+            em.AssociateInstance<EventsTrace>(trace, existingEvents);
             em.AssociateInstance<RootTrace>(root, trace);
             if (who != null)
             {
                 em.AssociateInstance<WhoTrace>(who, trace);
             }
-            //em.AssociateInstance<AccountTrace>(account, trace);
         }
 
-        internal static void BuildPeriod<T, R>(IDataManager dm, DateTime traceDate, Trace trace, DateTime datePeriod, string datePeriodFormat) 
-        where T:Entity, IEntity, IDataWrapper, new()
-        where R : DataWrapper, IDataWrapper, IRelation, new()
+        internal static void BuildPeriod<T, R>(IDataManager dm, Guid rootId, Guid eventsId, Trace trace, DateTime datePeriod, string datePeriodFormat)
+            where T : Entity, IEntity, IDataWrapper, new()
+            where R : DataWrapper, IDataWrapper, IRelation, new()
         {
             IEntityManager em = dm as IEntityManager;
 
-            string timeId = GetTimeIdFromTimeTagKey(trace.IndexKey, datePeriodFormat);
+            string timeId = GetTimeIdFromDate(rootId, eventsId, datePeriod, datePeriodFormat);
 
             T t = em.GetInstance<T>(timeId);
 
@@ -487,7 +415,7 @@ namespace TraceMyApps
                     t.data["DatePeriod"] = datePeriod;
                 }
             }
-            
+
             em.AssociateInstance<R>(trace, t);
 
             if (trace.Value != null)
@@ -515,7 +443,7 @@ namespace TraceMyApps
             {
                 var roleRelations = new List<IRoleRelationQuery>();
 
-                roleRelations.Add(new RoleRelationQuery<Root, RootTag>());
+                roleRelations.Add(new RoleRelationQuery<Root, RootEvents>());
 
                 dm.LoadEntitiesGraph<Root>(roleRelations);
             }
@@ -529,6 +457,7 @@ namespace TraceMyApps
                 if (em.GetAllInstances<Root>().Count == 0)
                 {
                     root = em.CreateInstance<Root>();
+                    dm.SaveTransactional();
                 }
                 else root = em.GetAllInstances<Root>()[0];
             }
@@ -544,6 +473,69 @@ namespace TraceMyApps
             GetRoot(dm, false);
 
             dm.SaveTransactional();
+        }
+
+        void ITrace.FillSerie()
+        {
+            IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
+
+            IEntityManager em = dm as IEntityManager;
+
+            var r = GetRoot(dm, true);
+
+            List<Couple<string, bool>> tags = new List<Couple<string, bool>>();
+
+            tags.Add(new Couple<string, bool>("Sales", true));
+            tags.Add(new Couple<string, bool>("Subscription", false));
+            //tags.Add(new Couple<string, bool>("GetStartedClick", false));
+            //tags.Add(new Couple<string, bool>("About", false));
+            //tags.Add(new Couple<string, bool>("Subscribe", false));
+            //tags.Add(new Couple<string, bool>("Tweet", false));
+            //tags.Add(new Couple<string, bool>("GooglePlus", false));
+            //tags.Add(new Couple<string, bool>("AddToBasket", false));
+            //tags.Add(new Couple<string, bool>("Downloads", false));
+            //tags.Add(new Couple<string, bool>("Pricing", false));
+            //tags.Add(new Couple<string, bool>("Documentation", false));
+            //tags.Add(new Couple<string, bool>("Likes", false));
+            //tags.Add(new Couple<string, bool>("Votes", false));
+            //tags.Add(new Couple<string, bool>("Share", false));
+            //tags.Add(new Couple<string, bool>("Audience", true));
+
+            foreach (Couple<string, bool> couple in tags)
+            {
+                Random random = new Random();
+
+                int nbTagTrace = random.Next(200);
+
+                string eventsName = couple.First;
+                for (var i = 0; i < nbTagTrace; i++)
+                {
+                    random = new Random();
+                    decimal? value = null;
+                    if (couple.Second)
+                    {
+                        value = random.Next(200);
+                        value = value + ((decimal)random.Next(100) / 100);
+
+                    }
+
+                    var day = random.Next(90);
+                    var hour = random.Next(23);
+                    var minute = random.Next(60);
+
+                    var now = DateTime.UtcNow;
+                    DateTime traceDate = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
+
+                    traceDate = traceDate.AddDays(-day);
+                    traceDate = traceDate.AddHours(hour);
+                    traceDate = traceDate.AddMinutes(minute);
+
+                    TraceService.BuildTrace(r, value, null, null, null, "", dm, traceDate, eventsName);
+                }
+
+                dm.SaveTransactional();
+            }
+
         }
     }
 }

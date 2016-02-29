@@ -16,7 +16,7 @@ namespace TraceEvents
 		public static partial class Entities
 		{
 			public const string Trace = "Trace";
-			public const string Tag = "Tag";
+			public const string Events = "Events";
 			public const string Year = "Year";
 			public const string Month = "Month";
 			public const string Day = "Day";
@@ -25,7 +25,7 @@ namespace TraceEvents
 			public const string DateFilterTemp = "DateFilterTemp";
 			public const string Week = "Week";
 			public const string Quarter = "Quarter";
-			public const string TagStat = "TagStat";
+			public const string Stat = "Stat";
 			public const string TraceRequest = "TraceRequest";
 			public const string Who = "Who";
 			public const string Root = "Root";
@@ -33,26 +33,26 @@ namespace TraceEvents
 
 		public static partial class Relations
 		{
-			public const string TagTrace = "TagTrace";
+			public const string EventsTrace = "EventsTrace";
 			public const string TraceYear = "TraceYear";
 			public const string TraceMonth = "TraceMonth";
 			public const string TraceDay = "TraceDay";
 			public const string TraceHour = "TraceHour";
 			public const string TraceMinute = "TraceMinute";
-			public const string TagMinute = "TagMinute";
-			public const string TagDay = "TagDay";
-			public const string TagMonth = "TagMonth";
-			public const string TagHour = "TagHour";
-			public const string TagYear = "TagYear";
+			public const string EventsMinute = "EventsMinute";
+			public const string EventsDay = "EventsDay";
+			public const string EventsMonth = "EventsMonth";
+			public const string EventsHour = "EventsHour";
+			public const string EventsYear = "EventsYear";
 			public const string TraceWeek = "TraceWeek";
-			public const string TagWeek = "TagWeek";
-			public const string TagQuarter = "TagQuarter";
+			public const string EventsWeek = "EventsWeek";
+			public const string EventsQuarter = "EventsQuarter";
 			public const string TraceQuarter = "TraceQuarter";
-			public const string TagStatTag = "TagStatTag";
+			public const string EventsStat = "EventsStat";
 			public const string WhoTrace = "WhoTrace";
 			public const string RootWho = "RootWho";
 			public const string RootTrace = "RootTrace";
-			public const string RootTag = "RootTag";
+			public const string RootEvents = "RootEvents";
 		}
 	}
 
@@ -108,14 +108,13 @@ namespace TraceEvents
 		Discrete
 	}
 
-	[DataDefinition]
+	[DataDefinition(PhysicalName = "TraceEventsTrace")]
 	public class Trace : Entity, IDataWrapper
 	{
 		public static partial class Fields
 		{
 			public const string Id = "Id";
 			public const string DateTrace = "DateTrace";
-			public const string Tags = "Tags";
 			public const string Who = "Who";
 			public const string UserAgent = "UserAgent";
 			public const string Longitude = "Longitude";
@@ -142,13 +141,6 @@ namespace TraceEvents
 		{
 			get { return getValue<DateTime>("DateTrace"); }
 			set { setValue<DateTime>("DateTrace", value); }
-		}
-
-		[Data(DefaultValue = "")]
-		public string Tags
-		{
-			get { return getValue<string>("Tags"); }
-			set { setValue<string>("Tags", value); }
 		}
 
 		[Data(IsNullable = true)]
@@ -202,15 +194,15 @@ namespace TraceEvents
 
 	}
 
-	[DataDefinition]
-	public class Tag : Entity, IDataWrapper
+	[DataDefinition(PhysicalName = "TraceEventsEvents")]
+	public class Events : Entity, IDataWrapper
 	{
 		public static partial class Fields
 		{
 			public const string Id = "Id";
 			public const string Name = "Name";
-			public const string CountTag = "CountTag";
-			public const string SumTag = "SumTag";
+			public const string CountEvents = "CountEvents";
+			public const string SumEvents = "SumEvents";
 			public const string ValueType = "ValueType";
 			public const string Selected = "Selected";
 			public const string MinValue = "MinValue";
@@ -244,18 +236,18 @@ namespace TraceEvents
 			set { setValue<string>("Name", value); }
 		}
 
-		[Data(AggregationChild = "TagTrace")]
-		public long CountTag
+		[Data(AggregationChild = "EventsTrace")]
+		public long CountEvents
 		{
-			get { return getValue<long>("CountTag"); }
-			set { setValue<long>("CountTag", value); }
+			get { return getValue<long>("CountEvents"); }
+			set { setValue<long>("CountEvents", value); }
 		}
 
 		[Data]
-		public decimal SumTag
+		public decimal SumEvents
 		{
-			get { return getValue<decimal>("SumTag"); }
-			set { setValue<decimal>("SumTag", value); }
+			get { return getValue<decimal>("SumEvents"); }
+			set { setValue<decimal>("SumEvents", value); }
 		}
 
 		[Data(DefaultValue = EnumTagValueType.NoValue)]
@@ -329,37 +321,37 @@ namespace TraceEvents
 
 		public List<Day> Day
 		{
-			get { return this.GetAssociatedInstances<Day, TagDay>(); }
+			get { return this.GetAssociatedInstances<Day, EventsDay>(); }
 		}
 
 		public List<Month> Month
 		{
-			get { return this.GetAssociatedInstances<Month, TagMonth>(); }
+			get { return this.GetAssociatedInstances<Month, EventsMonth>(); }
 		}
 
 		public List<Hour> Hour
 		{
-			get { return this.GetAssociatedInstances<Hour, TagHour>(); }
+			get { return this.GetAssociatedInstances<Hour, EventsHour>(); }
 		}
 
 		public List<Year> Year
 		{
-			get { return this.GetAssociatedInstances<Year, TagYear>(); }
+			get { return this.GetAssociatedInstances<Year, EventsYear>(); }
 		}
 
 		public List<Week> Week
 		{
-			get { return this.GetAssociatedInstances<Week, TagWeek>(); }
+			get { return this.GetAssociatedInstances<Week, EventsWeek>(); }
 		}
 
 		public List<Quarter> Quarter
 		{
-			get { return this.GetAssociatedInstances<Quarter, TagQuarter>(); }
+			get { return this.GetAssociatedInstances<Quarter, EventsQuarter>(); }
 		}
 
 	}
 
-	[DataDefinition]
+	[DataDefinition(PhysicalName = "TraceEventsYear")]
 	public class Year : Entity, IDataWrapper
 	{
 		public static partial class Fields
@@ -421,7 +413,7 @@ namespace TraceEvents
 
 	}
 
-	[DataDefinition]
+	[DataDefinition(PhysicalName = "TraceEventsMonth")]
 	public class Month : Entity, IDataWrapper
 	{
 		public static partial class Fields
@@ -483,7 +475,7 @@ namespace TraceEvents
 
 	}
 
-	[DataDefinition]
+	[DataDefinition(PhysicalName = "TraceEventsDay")]
 	public class Day : Entity, IDataWrapper
 	{
 		public static partial class Fields
@@ -545,7 +537,7 @@ namespace TraceEvents
 
 	}
 
-	[DataDefinition]
+	[DataDefinition(PhysicalName = "TraceEventsHour")]
 	public class Hour : Entity, IDataWrapper
 	{
 		public static partial class Fields
@@ -607,7 +599,7 @@ namespace TraceEvents
 
 	}
 
-	[DataDefinition]
+	[DataDefinition(PhysicalName = "TraceEventsMinute")]
 	public class Minute : Entity, IDataWrapper
 	{
 		public static partial class Fields
@@ -732,7 +724,7 @@ namespace TraceEvents
 
 	}
 
-	[DataDefinition]
+	[DataDefinition(PhysicalName = "TraceEventsWeek")]
 	public class Week : Entity, IDataWrapper
 	{
 		public static partial class Fields
@@ -794,7 +786,7 @@ namespace TraceEvents
 
 	}
 
-	[DataDefinition]
+	[DataDefinition(PhysicalName = "TraceEventsQuarter")]
 	public class Quarter : Entity, IDataWrapper
 	{
 		public static partial class Fields
@@ -857,7 +849,7 @@ namespace TraceEvents
 	}
 
 	[DataDefinition(MustPersist = false)]
-	public class TagStat : Entity, IDataWrapper
+	public class Stat : Entity, IDataWrapper
 	{
 		public static partial class Fields
 		{
@@ -990,7 +982,7 @@ namespace TraceEvents
 
 	}
 
-	[DataDefinition]
+	[DataDefinition(PhysicalName = "TraceEventsTraceRequest")]
 	public class TraceRequest : Entity, IDataWrapper
 	{
 		public static partial class Fields
@@ -1052,7 +1044,7 @@ namespace TraceEvents
 
 	}
 
-	[DataDefinition]
+	[DataDefinition(PhysicalName = "TraceEventsWho")]
 	public class Who : Entity, IDataWrapper
 	{
 		public static partial class Fields
@@ -1090,7 +1082,7 @@ namespace TraceEvents
 
 	}
 
-	[DataDefinition]
+	[DataDefinition(PhysicalName = "TraceEventsRoot")]
 	public class Root : Entity, IDataWrapper
 	{
 		public static partial class Fields
@@ -1118,24 +1110,24 @@ namespace TraceEvents
 			set { setValue<DateTime>("Now", value); }
 		}
 
-		public List<Tag> Tag
+		public List<Events> Events
 		{
-			get { return this.GetAssociatedInstances<Tag, RootTag>(); }
+			get { return this.GetAssociatedInstances<Events, RootEvents>(); }
 		}
 
 	}
 
 	[DataDefinition]
 	[RelationPersistenceMode(SeparateTable = false)]
-	public class TagTrace : DataWrapper, IDataWrapper, IRelation
+	public class EventsTrace : DataWrapper, IDataWrapper, IRelation
 	{
 		void IDataWrapper.InitData(DataRow data, string namePrefix)
 		{
 			base.InitData(data, null);
 		}
 
-		[RelationEnd(Type = typeof(Tag), Role = typeof(Tag), Multiplicity = Multiplicity.One, FkNames = "TagId")]
-		public IEntity Tag;
+		[RelationEnd(Type = typeof(Events), Role = typeof(Events), Multiplicity = Multiplicity.One, FkNames = "EventsId")]
+		public IEntity Events;
 
 		[RelationEnd(Type = typeof(Trace), Role = typeof(Trace), Multiplicity = Multiplicity.ZeroOrMany)]
 		public IEntity Trace;
@@ -1229,7 +1221,7 @@ namespace TraceEvents
 
 	[DataDefinition(MustPersist = false)]
 	[RelationPersistenceMode(SeparateTable = false)]
-	public class TagMinute : DataWrapper, IDataWrapper, IRelation
+	public class EventsMinute : DataWrapper, IDataWrapper, IRelation
 	{
 		void IDataWrapper.InitData(DataRow data, string namePrefix)
 		{
@@ -1239,14 +1231,14 @@ namespace TraceEvents
 		[RelationEnd(Type = typeof(Minute), Role = typeof(Minute), Multiplicity = Multiplicity.ZeroOrMany)]
 		public IEntity Minute;
 
-		[RelationEnd(Type = typeof(Tag), Role = typeof(Tag), Multiplicity = Multiplicity.One, FkNames = "TagId", SortColumn = "TimeKey")]
-		public IEntity Tag;
+		[RelationEnd(Type = typeof(Events), Role = typeof(Events), Multiplicity = Multiplicity.One, FkNames = "TagId", SortColumn = "TimeKey")]
+		public IEntity Events;
 
 	}
 
 	[DataDefinition(MustPersist = false)]
 	[RelationPersistenceMode(SeparateTable = false)]
-	public class TagDay : DataWrapper, IDataWrapper, IRelation
+	public class EventsDay : DataWrapper, IDataWrapper, IRelation
 	{
 		void IDataWrapper.InitData(DataRow data, string namePrefix)
 		{
@@ -1256,14 +1248,14 @@ namespace TraceEvents
 		[RelationEnd(Type = typeof(Day), Role = typeof(Day), Multiplicity = Multiplicity.ZeroOrMany)]
 		public IEntity Day;
 
-		[RelationEnd(Type = typeof(Tag), Role = typeof(Tag), Multiplicity = Multiplicity.One, FkNames = "TagId", SortColumn = "TimeKey")]
-		public IEntity Tag;
+		[RelationEnd(Type = typeof(Events), Role = typeof(Events), Multiplicity = Multiplicity.One, FkNames = "TagId", SortColumn = "TimeKey")]
+		public IEntity Events;
 
 	}
 
 	[DataDefinition(MustPersist = false)]
 	[RelationPersistenceMode(SeparateTable = false)]
-	public class TagMonth : DataWrapper, IDataWrapper, IRelation
+	public class EventsMonth : DataWrapper, IDataWrapper, IRelation
 	{
 		void IDataWrapper.InitData(DataRow data, string namePrefix)
 		{
@@ -1273,14 +1265,14 @@ namespace TraceEvents
 		[RelationEnd(Type = typeof(Month), Role = typeof(Month), Multiplicity = Multiplicity.ZeroOrMany)]
 		public IEntity Month;
 
-		[RelationEnd(Type = typeof(Tag), Role = typeof(Tag), Multiplicity = Multiplicity.One, FkNames = "TagId", SortColumn = "TimeKey")]
-		public IEntity Tag;
+		[RelationEnd(Type = typeof(Events), Role = typeof(Events), Multiplicity = Multiplicity.One, FkNames = "TagId", SortColumn = "TimeKey")]
+		public IEntity Events;
 
 	}
 
 	[DataDefinition(MustPersist = false)]
 	[RelationPersistenceMode(SeparateTable = false)]
-	public class TagHour : DataWrapper, IDataWrapper, IRelation
+	public class EventsHour : DataWrapper, IDataWrapper, IRelation
 	{
 		void IDataWrapper.InitData(DataRow data, string namePrefix)
 		{
@@ -1290,22 +1282,22 @@ namespace TraceEvents
 		[RelationEnd(Type = typeof(Hour), Role = typeof(Hour), Multiplicity = Multiplicity.ZeroOrMany)]
 		public IEntity Hour;
 
-		[RelationEnd(Type = typeof(Tag), Role = typeof(Tag), Multiplicity = Multiplicity.One, FkNames = "TagId", SortColumn = "TimeKey")]
-		public IEntity Tag;
+		[RelationEnd(Type = typeof(Events), Role = typeof(Events), Multiplicity = Multiplicity.One, FkNames = "TagId", SortColumn = "TimeKey")]
+		public IEntity Events;
 
 	}
 
 	[DataDefinition(MustPersist = false)]
 	[RelationPersistenceMode(SeparateTable = false)]
-	public class TagYear : DataWrapper, IDataWrapper, IRelation
+	public class EventsYear : DataWrapper, IDataWrapper, IRelation
 	{
 		void IDataWrapper.InitData(DataRow data, string namePrefix)
 		{
 			base.InitData(data, null);
 		}
 
-		[RelationEnd(Type = typeof(Tag), Role = typeof(Tag), Multiplicity = Multiplicity.One, FkNames = "TagId", SortColumn = "TimeKey")]
-		public IEntity Tag;
+		[RelationEnd(Type = typeof(Events), Role = typeof(Events), Multiplicity = Multiplicity.One, FkNames = "TagId", SortColumn = "TimeKey")]
+		public IEntity Events;
 
 		[RelationEnd(Type = typeof(Year), Role = typeof(Year), Multiplicity = Multiplicity.ZeroOrMany)]
 		public IEntity Year;
@@ -1331,15 +1323,15 @@ namespace TraceEvents
 
 	[DataDefinition(MustPersist = false)]
 	[RelationPersistenceMode(SeparateTable = false)]
-	public class TagWeek : DataWrapper, IDataWrapper, IRelation
+	public class EventsWeek : DataWrapper, IDataWrapper, IRelation
 	{
 		void IDataWrapper.InitData(DataRow data, string namePrefix)
 		{
 			base.InitData(data, null);
 		}
 
-		[RelationEnd(Type = typeof(Tag), Role = typeof(Tag), Multiplicity = Multiplicity.One, FkNames = "TagId", SortColumn = "TimeKey")]
-		public IEntity Tag;
+		[RelationEnd(Type = typeof(Events), Role = typeof(Events), Multiplicity = Multiplicity.One, FkNames = "TagId", SortColumn = "TimeKey")]
+		public IEntity Events;
 
 		[RelationEnd(Type = typeof(Week), Role = typeof(Week), Multiplicity = Multiplicity.ZeroOrMany)]
 		public IEntity Week;
@@ -1348,7 +1340,7 @@ namespace TraceEvents
 
 	[DataDefinition(MustPersist = false)]
 	[RelationPersistenceMode(SeparateTable = false)]
-	public class TagQuarter : DataWrapper, IDataWrapper, IRelation
+	public class EventsQuarter : DataWrapper, IDataWrapper, IRelation
 	{
 		void IDataWrapper.InitData(DataRow data, string namePrefix)
 		{
@@ -1358,8 +1350,8 @@ namespace TraceEvents
 		[RelationEnd(Type = typeof(Quarter), Role = typeof(Quarter), Multiplicity = Multiplicity.ZeroOrMany)]
 		public IEntity Quarter;
 
-		[RelationEnd(Type = typeof(Tag), Role = typeof(Tag), Multiplicity = Multiplicity.One, FkNames = "TagId", SortColumn = "TimeKey")]
-		public IEntity Tag;
+		[RelationEnd(Type = typeof(Events), Role = typeof(Events), Multiplicity = Multiplicity.One, FkNames = "TagId", SortColumn = "TimeKey")]
+		public IEntity Events;
 
 	}
 
@@ -1381,18 +1373,18 @@ namespace TraceEvents
 	}
 
 	[DataDefinition(MustPersist = false)]
-	public class TagStatTag : DataWrapper, IDataWrapper, IRelation
+	public class EventsStat : DataWrapper, IDataWrapper, IRelation
 	{
 		void IDataWrapper.InitData(DataRow data, string namePrefix)
 		{
 			base.InitData(data, null);
 		}
 
-		[RelationEnd(Type = typeof(TagStat), Role = typeof(TagStat), Multiplicity = Multiplicity.One)]
-		public IEntity TagStat;
+		[RelationEnd(Type = typeof(Stat), Role = typeof(Stat), Multiplicity = Multiplicity.One)]
+		public IEntity Stat;
 
-		[RelationEnd(Type = typeof(Tag), Role = typeof(Tag), Multiplicity = Multiplicity.ZeroOrOne)]
-		public IEntity Tag;
+		[RelationEnd(Type = typeof(Events), Role = typeof(Events), Multiplicity = Multiplicity.ZeroOrOne)]
+		public IEntity Events;
 
 	}
 
@@ -1449,15 +1441,15 @@ namespace TraceEvents
 
 	[DataDefinition]
 	[RelationPersistenceMode(SeparateTable = false)]
-	public class RootTag : DataWrapper, IDataWrapper, IRelation
+	public class RootEvents : DataWrapper, IDataWrapper, IRelation
 	{
 		void IDataWrapper.InitData(DataRow data, string namePrefix)
 		{
 			base.InitData(data, null);
 		}
 
-		[RelationEnd(Type = typeof(Tag), Role = typeof(Tag), Multiplicity = Multiplicity.ZeroOrMany)]
-		public IEntity Tag;
+		[RelationEnd(Type = typeof(Events), Role = typeof(Events), Multiplicity = Multiplicity.ZeroOrMany)]
+		public IEntity Events;
 
 		[RelationEnd(Type = typeof(Root), Role = typeof(Root), Multiplicity = Multiplicity.One, FkNames = "RootId", SortColumn = "Name")]
 		public IEntity Root;
