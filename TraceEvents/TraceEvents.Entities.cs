@@ -1059,11 +1059,11 @@ namespace TraceEvents
 			base.InitData(data, null);
 		}
 
-		[Data(IsPrimaryKey=true)]
-		public Guid Id
+		[Data(IsPrimaryKey = true)]
+		public string Id
 		{
-			get { return getValue<Guid>("Id"); }
-			set { setValue<Guid>("Id", value); }
+			get { return getValue<string>("Id"); }
+			set { setValue<string>("Id", value); }
 		}
 
 		[Data]

@@ -136,8 +136,9 @@
         <entityProperty name="TimeSpan" type="Int64" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
       </properties>
     </entity>
-    <entity Id="44548a82-75df-47a4-8109-1f5f0fbe4469" name="Who" guid="16cb8c5b-b469-4d66-abe2-611113426c8e" physicalName="TraceEventsWho" hasCustomValidators="false" hasTriggers="false">
+    <entity Id="44548a82-75df-47a4-8109-1f5f0fbe4469" name="Who" guid="16cb8c5b-b469-4d66-abe2-611113426c8e" physicalName="TraceEventsWho" guidIdentifier="false" hasCustomValidators="false" hasTriggers="false">
       <properties>
+        <entityProperty name="Id" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" identifier="Identifier" />
         <entityProperty name="DateFirstTrace" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
         <entityProperty name="DateLastTrace" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
       </properties>

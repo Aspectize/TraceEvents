@@ -11,7 +11,7 @@ namespace TraceMyApps
 {
     public interface ITrace
     {
-        void Events(string events, string value, Guid? whoId, string longitude, string latitude, string info);
+        void Events(string events, string value, string whoId, string info);
 
         DataSet LoadTraces();
         //DataSet GetTrace(Date dateStart, Date dateEnd);
@@ -237,7 +237,7 @@ namespace TraceMyApps
         }
 
 
-        void ITrace.Events(string events, string value, Guid? whoId, string longitude, string latitude, string info)
+        void ITrace.Events(string events, string value, string whoId, string info)
         {
             IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
 
@@ -260,17 +260,18 @@ namespace TraceMyApps
 
             Who who = null;
 
-            if (!whoId.HasValue)
+            if (string.IsNullOrEmpty(whoId))
             {
-                whoId = Guid.Empty;
+                whoId = Guid.Empty.ToString("N");
             }
-            who = dm.GetEntity<Who>(whoId.Value);
+
+            who = dm.GetEntity<Who>(whoId);
 
             if (who == null)
             {
                 who = em.CreateInstance<Who>();
 
-                who.Id = whoId.Value;
+                who.Id = whoId;
 
                 em.AssociateInstance<RootWho>(who, root);
             }
@@ -349,7 +350,7 @@ namespace TraceMyApps
 
             trace.DateTrace = traceDate;
             trace.Value = value;
-            trace.Who = (who != null) ? who.Id.ToString("N") : "";
+            trace.Who = (who != null) ? who.Id : "";
             trace.Longitude = longitude;
             trace.Latitude = latitude;
             trace.Info = info;
