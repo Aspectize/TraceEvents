@@ -5,7 +5,7 @@ An event may be any action a client takes in your application; this can be subsc
 
 ## 1 - Configuration
 
-You need a DataBaseService, either Azure or SQL Server.
+You need a DataBaseService, either Azure Storage or SQL Server.
 
 Add TraceEvents as Shared Application: in your application definition file, add TraceEvents in the Directories list :
 ```javascript
