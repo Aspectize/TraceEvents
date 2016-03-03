@@ -16,21 +16,21 @@ namespace TraceMyApps
         DataSet LoadTraces();
         //DataSet GetTrace(Date dateStart, Date dateEnd);
         DataSet GetEventsHistory(Guid eventsId, Date dateStart, Date dateEnd, EnumFrequency frequency);
-        void FillSerie();
+        //void FillSerie();
 
     }
 
     [Service(Name = "TraceEventsConfigurableService", ConfigurationRequired = true)]
-    public class TraceService : ITrace, IInitializable//, ISingleton
+    public class TraceService : ITrace, IInitializable
     {
-        internal static string ExtractFormatDateYear = "yyyy";
-        internal static string ExtractFormatDateQuarter = "yyyyQ";
-        internal static string ExtractFormatDateMonth = "yyyyQMM";
-        internal static string ExtractFormatDateWeek = "yyyyQMMWW";
-        internal static string ExtractFormatDateDay = "yyyyQMMWWdd";
-        internal static string ExtractFormatDateHour = "yyyyQMMWWddHH";
-        internal static string ExtractFormatDateMinute = "yyyyQMMWWddHHmm";
-        internal static string ExtractFormatDateFull = "yyyyQMMWWddHHmmss";
+        const string ExtractFormatDateYear = "yyyy";
+        const string ExtractFormatDateQuarter = "yyyyQ";
+        const string ExtractFormatDateMonth = "yyyyQMM";
+        const string ExtractFormatDateWeek = "yyyyQMMWW";
+        const string ExtractFormatDateDay = "yyyyQMMWWdd";
+        const string ExtractFormatDateHour = "yyyyQMMWWddHH";
+        const string ExtractFormatDateMinute = "yyyyQMMWWddHHmm";
+        const string ExtractFormatDateFull = "yyyyQMMWWddHHmmss";
 
         [Parameter(Optional = false)]
         string DataServiceName = "";
@@ -424,15 +424,6 @@ namespace TraceMyApps
             }
         }
 
-        private static Dictionary<string, object> buildReturnDictionary(string key, object o)
-        {
-            Dictionary<string, object> d = new Dictionary<string, object>();
-
-            d.Add(key, o);
-
-            return d;
-        }
-
         static Root root = null;
 
         public static Root GetRoot(IDataManager dm, bool withTag)
@@ -475,67 +466,67 @@ namespace TraceMyApps
             dm.SaveTransactional();
         }
 
-        void ITrace.FillSerie()
-        {
-            IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
+        //void ITrace.FillSerie()
+        //{
+        //    IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
 
-            IEntityManager em = dm as IEntityManager;
+        //    IEntityManager em = dm as IEntityManager;
 
-            var r = GetRoot(dm, true);
+        //    var r = GetRoot(dm, true);
 
-            List<Couple<string, bool>> tags = new List<Couple<string, bool>>();
+        //    List<Couple<string, bool>> tags = new List<Couple<string, bool>>();
 
-            tags.Add(new Couple<string, bool>("Sales", true));
-            tags.Add(new Couple<string, bool>("Subscription", false));
-            //tags.Add(new Couple<string, bool>("GetStartedClick", false));
-            //tags.Add(new Couple<string, bool>("About", false));
-            //tags.Add(new Couple<string, bool>("Subscribe", false));
-            //tags.Add(new Couple<string, bool>("Tweet", false));
-            //tags.Add(new Couple<string, bool>("GooglePlus", false));
-            //tags.Add(new Couple<string, bool>("AddToBasket", false));
-            //tags.Add(new Couple<string, bool>("Downloads", false));
-            //tags.Add(new Couple<string, bool>("Pricing", false));
-            //tags.Add(new Couple<string, bool>("Documentation", false));
-            //tags.Add(new Couple<string, bool>("Likes", false));
-            //tags.Add(new Couple<string, bool>("Votes", false));
-            //tags.Add(new Couple<string, bool>("Share", false));
-            //tags.Add(new Couple<string, bool>("Audience", true));
+        //    tags.Add(new Couple<string, bool>("Sales", true));
+        //    tags.Add(new Couple<string, bool>("Subscription", false));
+        //    //tags.Add(new Couple<string, bool>("GetStartedClick", false));
+        //    //tags.Add(new Couple<string, bool>("About", false));
+        //    //tags.Add(new Couple<string, bool>("Subscribe", false));
+        //    //tags.Add(new Couple<string, bool>("Tweet", false));
+        //    //tags.Add(new Couple<string, bool>("GooglePlus", false));
+        //    //tags.Add(new Couple<string, bool>("AddToBasket", false));
+        //    //tags.Add(new Couple<string, bool>("Downloads", false));
+        //    //tags.Add(new Couple<string, bool>("Pricing", false));
+        //    //tags.Add(new Couple<string, bool>("Documentation", false));
+        //    //tags.Add(new Couple<string, bool>("Likes", false));
+        //    //tags.Add(new Couple<string, bool>("Votes", false));
+        //    //tags.Add(new Couple<string, bool>("Share", false));
+        //    //tags.Add(new Couple<string, bool>("Audience", true));
 
-            foreach (Couple<string, bool> couple in tags)
-            {
-                Random random = new Random();
+        //    foreach (Couple<string, bool> couple in tags)
+        //    {
+        //        Random random = new Random();
 
-                int nbTagTrace = random.Next(200);
+        //        int nbTagTrace = random.Next(200);
 
-                string eventsName = couple.First;
-                for (var i = 0; i < nbTagTrace; i++)
-                {
-                    random = new Random();
-                    decimal? value = null;
-                    if (couple.Second)
-                    {
-                        value = random.Next(200);
-                        value = value + ((decimal)random.Next(100) / 100);
+        //        string eventsName = couple.First;
+        //        for (var i = 0; i < nbTagTrace; i++)
+        //        {
+        //            random = new Random();
+        //            decimal? value = null;
+        //            if (couple.Second)
+        //            {
+        //                value = random.Next(200);
+        //                value = value + ((decimal)random.Next(100) / 100);
 
-                    }
+        //            }
 
-                    var day = random.Next(90);
-                    var hour = random.Next(23);
-                    var minute = random.Next(60);
+        //            var day = random.Next(90);
+        //            var hour = random.Next(23);
+        //            var minute = random.Next(60);
 
-                    var now = DateTime.UtcNow;
-                    DateTime traceDate = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
+        //            var now = DateTime.UtcNow;
+        //            DateTime traceDate = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
 
-                    traceDate = traceDate.AddDays(-day);
-                    traceDate = traceDate.AddHours(hour);
-                    traceDate = traceDate.AddMinutes(minute);
+        //            traceDate = traceDate.AddDays(-day);
+        //            traceDate = traceDate.AddHours(hour);
+        //            traceDate = traceDate.AddMinutes(minute);
 
-                    TraceService.BuildTrace(r, value, null, null, null, "", dm, traceDate, eventsName);
-                }
+        //            TraceService.BuildTrace(r, value, null, null, null, "", dm, traceDate, eventsName);
+        //        }
 
-                dm.SaveTransactional();
-            }
+        //        dm.SaveTransactional();
+        //    }
 
-        }
+        //}
     }
 }

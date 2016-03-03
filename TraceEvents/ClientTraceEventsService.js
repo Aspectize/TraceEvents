@@ -97,7 +97,6 @@ Global.ClientTraceEventsService = {
             maxDateString = maxDateString + Aspectize.formatString('{0:mm}', maxDateTomorrow);
         }
 
-        // Patch pour les semaines à cheval sur 2 mois ou quarter
         if (enumFrequency.EnumerationValue == 8) {
             minDateString = Aspectize.formatString('{0:yyyy}', minDate) + '000' + getWeekNumber(minDate);
             maxDateString = Aspectize.formatString('{0:yyyy}', maxDateTomorrow) + '000' + getWeekNumber(maxDateTomorrow);

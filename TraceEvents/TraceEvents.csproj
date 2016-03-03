@@ -61,7 +61,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -72,7 +71,6 @@
       <DependentUpon>TraceEvents.Entities</DependentUpon>
     </Compile>
     <Compile Include="TraceService.cs" />
-    <Compile Include="TriggerService.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
