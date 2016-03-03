@@ -8,12 +8,16 @@ An event may be any action a client takes in your application; this can be subsc
 You need a DataBaseService, either Azure or SQL Server.
 
 Add TraceEvents as Shared Application: in your application definition file, add TraceEvents in the Directories list :
+```javascript
 app.Directories = "TraceEvents";
+```
 
 Create a configured service: in your service definition file, add the following lines:
 
+```javascript
 var myTraceEventsService = Aspectize.ConfigureNewService('MyTraceEventsService', aas.ConfigurableServices.TraceEventsConfigurableService);
 myTraceEventsService.DataServiceName = 'MyDataService'; 
+```
 
 MyDataService is the name of your DataBaseService.
 
