@@ -19,7 +19,7 @@ var myTraceEventsService = Aspectize.ConfigureNewService('MyTraceEventsService',
 myTraceEventsService.DataServiceName = 'MyDataService'; 
 ```
 
-MyDataService is the name of your DataBaseService.
+MyDataService is the name of your DataBaseService, in which you want to store your traces.
 
 ## 2 - Usage
 
