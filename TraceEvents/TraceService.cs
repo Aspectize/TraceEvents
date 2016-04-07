@@ -276,7 +276,7 @@ namespace TraceMyApps
                 em.AssociateInstance<RootWho>(who, root);
             }
 
-            who.DateLastTrace = DateTime.UtcNow;
+            //who.DateLastTrace = DateTime.UtcNow;
 
             string[] eventslist = eventName.Split('|');
 
