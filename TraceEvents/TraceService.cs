@@ -11,7 +11,7 @@ namespace TraceMyApps
 {
     public interface ITrace
     {
-        void Events(string events, string value, string whoId, string info);
+        void Events(string eventName, string eventValue, string userId, string info);
 
         DataSet LoadTraces();
         //DataSet GetTrace(Date dateStart, Date dateEnd);
@@ -237,7 +237,7 @@ namespace TraceMyApps
         }
 
 
-        void ITrace.Events(string events, string value, string whoId, string info)
+        void ITrace.Events(string eventName, string eventValue, string userId, string info)
         {
             IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
 
@@ -247,10 +247,10 @@ namespace TraceMyApps
 
             decimal? decimalValue = null;
 
-            if (!string.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(eventValue))
             {
                 decimal decimalValueNonNull;
-                if (decimal.TryParse(value, out decimalValueNonNull))
+                if (decimal.TryParse(eventValue, out decimalValueNonNull))
                 {
                     decimalValue = decimalValueNonNull;
                 }
@@ -260,29 +260,29 @@ namespace TraceMyApps
 
             Who who = null;
 
-            if (string.IsNullOrEmpty(whoId))
+            if (string.IsNullOrEmpty(userId))
             {
-                whoId = Guid.Empty.ToString("N");
+                userId = Guid.Empty.ToString("N");
             }
 
-            who = dm.GetEntity<Who>(whoId);
+            who = dm.GetEntity<Who>(userId);
 
             if (who == null)
             {
                 who = em.CreateInstance<Who>();
 
-                who.Id = whoId;
+                who.Id = userId;
 
                 em.AssociateInstance<RootWho>(who, root);
             }
 
             who.DateLastTrace = DateTime.UtcNow;
 
-            string[] eventslist = events.Split('|');
+            string[] eventslist = eventName.Split('|');
 
-            foreach (string eventName in eventslist)
+            foreach (string name in eventslist)
             {
-                BuildTrace(root, decimalValue, who, null, null, info, dm, traceDate, eventName.Trim());
+                BuildTrace(root, decimalValue, who, null, null, info, dm, traceDate, name.Trim());
             }
 
             dm.SaveTransactional();
@@ -299,8 +299,8 @@ namespace TraceMyApps
             }
 
             return string.Format("{0:N}|{1:N}|{2}", rootId, eventsId, timeKey);
-        }        
- 
+        }
+
         internal static string GetTimeKey(DateTime date)
         {
             int quarter = GetNumQuarter(date);
