@@ -11,6 +11,7 @@ Add TraceEvents as Shared Application: in your application definition file, add 
 ```javascript
 app.Directories = "TraceEvents";
 ```
+Compile your project.
 
 Create a configured service: in your service definition file, add the following lines:
 
@@ -24,7 +25,7 @@ MyDataService is the name of your DataBaseService, in which you want to store yo
 ## 2 - Usage
 
 Call the Events Command to trace an event:
-- events: one or several event names, separated by |
+- eventName: one or several event names, separated by |
 - eventValue: optional value associated to an event
 - userId: id or any unique string that identify the user
 - info: any information associated to the event
@@ -43,5 +44,8 @@ var cmdTrace = Aspectize.Host.PrepareCommand();
 cmdTrace.Attributes.aasAsynchronousCall = true;
 cmdTrace.Call('Server/MyTraceEventsService.Events', eventName, value, userId, info);
 ```
+
+## 3 - Reporting
+
 
 
