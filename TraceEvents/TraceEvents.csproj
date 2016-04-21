@@ -51,6 +51,12 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>TraceEvents.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AspectizeCore">
       <HintPath>..\..\..\Delivery\Aspectize.core\AspectizeCore.dll</HintPath>
@@ -106,6 +112,7 @@
     <None Include="TraceEvents.Entities.diagram">
       <DependentUpon>TraceEvents.Entities</DependentUpon>
     </None>
+    <None Include="TraceEvents.snk" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
