@@ -241,9 +241,26 @@ namespace TraceMyApps
         const string fUserAgent = "userAgent";
         const string fDatetiem = "dt";
 
+        static string completeConnectionString (string cs) {
+
+            var hasDefaultEndpointsProtocol = false;
+
+            var parts = cs.Split(';');
+
+            foreach (var part in parts) {
+
+                if(part.Trim().StartsWith ("DefaultEndpointsProtocol")) {
+
+                    hasDefaultEndpointsProtocol = true; break;
+                }
+            }
+
+            return hasDefaultEndpointsProtocol ? cs : "DefaultEndpointsProtocol=https;" + cs;           
+        }
+
         static CloudQueue getCloudQueue (string queueStorage) {
 
-            var csa = CloudStorageAccount.Parse(queueStorage);
+            var csa = CloudStorageAccount.Parse(completeConnectionString (queueStorage));
             var qc = csa.CreateCloudQueueClient();
 
             CloudQueue q = qc.GetQueueReference(eventsQueue);
