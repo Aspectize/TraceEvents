@@ -10,6 +10,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
+using System.Threading;
 
 namespace TraceMyApps
 {
@@ -306,9 +307,11 @@ namespace TraceMyApps
 
                         q.DeleteMessage(m);
 
-                    } catch (Exception x) {
+                     } catch (ThreadAbortException tax) { 
 
-                       Context.LogException(x);
+                     } catch (Exception x) {
+
+                        Context.LogException(x);
                     }
 
                 } else System.Threading.Thread.Sleep(1000);                
