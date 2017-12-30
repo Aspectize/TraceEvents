@@ -26,7 +26,8 @@ namespace TraceMyApps
     }
 
     [Service(Name = "TraceEventsConfigurableService", ConfigurationRequired = true)]
-    public class TraceService : ITrace, IInitializable {
+    public class TraceService : ITrace, IInitializable
+    {
         const string ExtractFormatDateYear = "yyyy";
         const string ExtractFormatDateQuarter = "yyyyQ";
         const string ExtractFormatDateMonth = "yyyyQMM";
@@ -45,7 +46,8 @@ namespace TraceMyApps
 
 
         [PrincipalPermission(SecurityAction.Demand, Authenticated = true)]
-        DataSet ITrace.LoadTraces () {
+        DataSet ITrace.LoadTraces()
+        {
             IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
 
             IEntityManager em = dm as IEntityManager;
@@ -60,14 +62,16 @@ namespace TraceMyApps
             dm.LoadEntitiesGraph<Root>(roleRelationQuerys, root.Id);
 
             var now = DateTime.UtcNow;
-            foreach (Events events in em.GetAllInstances<Events>()) {
+            foreach (Events events in em.GetAllInstances<Events>())
+            {
                 BuildStat(dm, root.Id, events, now);
             }
 
             return dm.Data;
         }
 
-        internal static void BuildStat (IDataManager dm, Guid rootId, Events events, DateTime dateTime) {
+        internal static void BuildStat(IDataManager dm, Guid rootId, Events events, DateTime dateTime)
+        {
             IEntityManager em = dm as IEntityManager;
 
             Stat stat = em.CreateInstance<Stat>();
@@ -85,16 +89,18 @@ namespace TraceMyApps
             //BuildTagStat<Minute, TagMinute>(dm, rootId, events, stat, dateTime, TraceService.ExtractFormatDateMinute);
         }
 
-        internal static void BuildStat<T, R> (IDataManager dm, Guid rootId, Events events, Stat stat, DateTime dateTime, string datePeriodFormat)
+        internal static void BuildStat<T, R>(IDataManager dm, Guid rootId, Events events, Stat stat, DateTime dateTime, string datePeriodFormat)
             where T : Entity, IEntity, IDataWrapper, new()
-            where R : DataWrapper, IDataWrapper, IRelation, new() {
+            where R : DataWrapper, IDataWrapper, IRelation, new()
+        {
             IEntityManager em = dm as IEntityManager;
 
             string periodId = TraceService.GetTimeIdFromDate(rootId, events.Id, dateTime, datePeriodFormat);
 
             T t = dm.GetEntity<T>(periodId);
 
-            if (t != null) {
+            if (t != null)
+            {
                 em.AssociateInstance<R>(t, events);
 
                 string periodName = typeof(T).Name;
@@ -142,7 +148,8 @@ namespace TraceMyApps
         //    return dm.Data;
         //}
 
-        DataSet ITrace.GetEventsHistory (Guid eventsId, Date dateStart, Date dateEnd, EnumFrequency frequency) {
+        DataSet ITrace.GetEventsHistory(Guid eventsId, Date dateStart, Date dateEnd, EnumFrequency frequency)
+        {
             IDataManager dm = EntityManager.FromDataBaseService(DataServiceName);
 
             var root = GetRoot(dm, false);
@@ -167,7 +174,8 @@ namespace TraceMyApps
 
             List<Month> tagMonths = dm.GetEntities<Month>(qcMonth);
 
-            foreach (Month m in tagMonths) {
+            foreach (Month m in tagMonths)
+            {
                 em.AssociateInstance<EventsMonth>(events, m);
             }
 
@@ -176,7 +184,8 @@ namespace TraceMyApps
 
             List<Week> tagWeeks = dm.GetEntities<Week>(qcWeek);
 
-            foreach (Week w in tagWeeks) {
+            foreach (Week w in tagWeeks)
+            {
                 em.AssociateInstance<EventsWeek>(events, w);
             }
 
@@ -185,7 +194,8 @@ namespace TraceMyApps
 
             List<Day> days = dm.GetEntities<Day>(qcDay);
 
-            foreach (Day d in days) {
+            foreach (Day d in days)
+            {
                 em.AssociateInstance<EventsDay>(events, d);
             }
 
@@ -193,10 +203,12 @@ namespace TraceMyApps
 
             TimeSpan ts = new Date(dateEndTomorrow) - dateStart;
 
-            for (var i = 0; i < ts.Days; i++) {
+            for (var i = 0; i < ts.Days; i++)
+            {
                 string tempDayId = TraceService.GetTimeIdFromDate(root.Id, events.Id, temp, TraceService.ExtractFormatDateDay);
 
-                if (!events.Day.Exists(item => item.Id == tempDayId)) {
+                if (!events.Day.Exists(item => item.Id == tempDayId))
+                {
                     Day tempTagDay = em.CreateInstance<Day>();
                     tempTagDay.Id = tempDayId;
                     tempTagDay.TimeKey = tempDayId.Split('|')[2]; //TraceService.GetTimeKey(temp);
@@ -206,7 +218,8 @@ namespace TraceMyApps
 
                 string tempWeekId = TraceService.GetTimeIdFromDate(root.Id, events.Id, temp, TraceService.ExtractFormatDateWeek);
 
-                if (!events.Week.Exists(item => item.Id == tempWeekId)) {
+                if (!events.Week.Exists(item => item.Id == tempWeekId))
+                {
                     Week tempTagWeek = em.CreateInstance<Week>();
                     tempTagWeek.Id = tempWeekId;
                     tempTagWeek.TimeKey = tempWeekId.Split('|')[2]; //TraceService.GetTimeKey(temp);
@@ -216,7 +229,8 @@ namespace TraceMyApps
 
                 string tempMonthId = TraceService.GetTimeIdFromDate(root.Id, events.Id, temp, TraceService.ExtractFormatDateMonth);
 
-                if (!events.Month.Exists(item => item.Id == tempMonthId)) {
+                if (!events.Month.Exists(item => item.Id == tempMonthId))
+                {
                     Month tempTagMonth = em.CreateInstance<Month>();
                     tempTagMonth.Id = tempMonthId;
                     tempTagMonth.TimeKey = tempMonthId.Split('|')[2]; //TraceService.GetTimeKey(temp);
@@ -242,33 +256,39 @@ namespace TraceMyApps
         const string fUserAgent = "userAgent";
         const string fDatetiem = "dt";
 
-        static string completeConnectionString (string cs) {
+        static string completeConnectionString(string cs)
+        {
 
             var hasDefaultEndpointsProtocol = false;
 
             var parts = cs.Split(';');
 
-            foreach (var part in parts) {
+            foreach (var part in parts)
+            {
 
-                if(part.Trim().StartsWith ("DefaultEndpointsProtocol")) {
+                if (part.Trim().StartsWith("DefaultEndpointsProtocol"))
+                {
 
                     hasDefaultEndpointsProtocol = true; break;
                 }
             }
 
-            return hasDefaultEndpointsProtocol ? cs : "DefaultEndpointsProtocol=https;" + cs;           
+            return hasDefaultEndpointsProtocol ? cs : "DefaultEndpointsProtocol=https;" + cs;
         }
 
-        static CloudQueue getCloudQueue (string queueStorage) {
+        static CloudQueue getCloudQueue(string queueStorage)
+        {
 
-            var csa = CloudStorageAccount.Parse(completeConnectionString (queueStorage));
+            var csa = CloudStorageAccount.Parse(completeConnectionString(queueStorage));
             var qc = csa.CreateCloudQueueClient();
 
             CloudQueue q = qc.GetQueueReference(eventsQueue);
 
-            if (!eventsQueueCreated) {
+            if (!eventsQueueCreated)
+            {
 
-                lock(eventsQueue) {
+                lock (eventsQueue)
+                {
 
                     q.CreateIfNotExists();
                     eventsQueueCreated = true;
@@ -280,21 +300,28 @@ namespace TraceMyApps
 
         static bool processorRunning = false;
 
-        static void processor (string queueStorage, string dataServiceName) {
+        static void processor(string queueStorage, string dataServiceName)
+        {
 
             var q = getCloudQueue(queueStorage);
 
-            while (true) {
+            while (true)
+            {
 
                 processorRunning = true;
 
                 var m = q.GetMessage(TimeSpan.FromSeconds(60));
 
-                if (m != null) {
+                if (m != null)
+                {
 
-                    try {
+                    try
+                    {
+                        var messageString = m.AsString;
 
-                        var data = JValue.Parse(m.AsString);
+                        traceQueue(dataServiceName, messageString);
+
+                        var data = JValue.Parse(messageString);
 
                         var eventName = data.Value<string>(fEventName);
                         var eventValue = data.Value<string>(fEventValue);
@@ -304,21 +331,39 @@ namespace TraceMyApps
                         var dt = data.Value<DateTime>(fDatetiem);
 
                         handleMessage(dataServiceName, dt, eventName, eventValue, userId, info, userAgent);
+                    }
+                    catch (ThreadAbortException tax)
+                    {
 
-                        q.DeleteMessage(m);
-
-                     } catch (ThreadAbortException tax) { 
-
-                     } catch (Exception x) {
-
+                    }
+                    catch (Exception x)
+                    {
                         Context.LogException(x);
                     }
-
-                } else System.Threading.Thread.Sleep(1000);                
+                    finally
+                    {
+                        q.DeleteMessage(m);
+                    }
+                }
+                else System.Threading.Thread.Sleep(1000);
             }
         }
 
-        void sendMessage (string message) {
+        private static void traceQueue(string dataServiceName, string info)
+        {
+            IDataManager dm = EntityManager.FromDataBaseService(dataServiceName);
+
+            IEntityManager em = dm as IEntityManager;
+
+            var traceQueue = em.CreateInstance<TraceQueue>();
+
+            traceQueue.Info = info;
+
+            dm.SaveTransactional();
+        }
+
+        void sendMessage(string message)
+        {
 
             var m = new CloudQueueMessage(message);
 
@@ -326,8 +371,9 @@ namespace TraceMyApps
 
             q.AddMessageAsync(m);
         }
-       
-        string buildMessage (string eventName, string eventValue, string userId, string info, string userAgent) {
+
+        string buildMessage(string eventName, string eventValue, string userId, string info, string userAgent)
+        {
 
             var dt = DateTime.UtcNow;
 
@@ -343,7 +389,8 @@ namespace TraceMyApps
             return jsonObject.ToString();
         }
 
-        static void handleMessage (string dsn, DateTime dt, string eventName, string eventValue, string userId, string info, string userAgent) {
+        static void handleMessage(string dsn, DateTime dt, string eventName, string eventValue, string userId, string info, string userAgent)
+        {
 
             var DataServiceName = dsn;
 
@@ -355,9 +402,11 @@ namespace TraceMyApps
 
             decimal? decimalValue = null;
 
-            if (!string.IsNullOrEmpty(eventValue)) {
+            if (!string.IsNullOrEmpty(eventValue))
+            {
                 decimal decimalValueNonNull;
-                if (decimal.TryParse(eventValue, out decimalValueNonNull)) {
+                if (decimal.TryParse(eventValue, out decimalValueNonNull))
+                {
                     decimalValue = decimalValueNonNull;
                 }
             }
@@ -366,13 +415,15 @@ namespace TraceMyApps
 
             Who who = null;
 
-            if (string.IsNullOrEmpty(userId)) {
+            if (string.IsNullOrEmpty(userId))
+            {
                 userId = Guid.Empty.ToString("N");
             }
 
             who = dm.GetEntity<Who>(userId);
 
-            if (who == null) {
+            if (who == null)
+            {
                 who = em.CreateInstance<Who>();
 
                 who.Id = userId;
@@ -384,24 +435,32 @@ namespace TraceMyApps
 
             string[] eventslist = eventName.Split('|');
 
-            foreach (string name in eventslist) {
+            foreach (string name in eventslist)
+            {
                 BuildTrace(root, decimalValue, who, null, null, info, dm, traceDate, name.Trim());
             }
 
             dm.SaveTransactional();
         }
 
-        void ITrace.Events (string eventName, string eventValue, string userId, string info) {
+        void ITrace.Events(string eventName, string eventValue, string userId, string info)
+        {
+            if (!string.IsNullOrEmpty(eventName))
+            {
+                var userAgent = (HttpContext.Current != null && HttpContext.Current.Request != null) ? HttpContext.Current.Request.UserAgent : String.Empty;
 
-            var userAgent = (HttpContext.Current != null && HttpContext.Current.Request != null) ? HttpContext.Current.Request.UserAgent : String.Empty;
+                var message = buildMessage(eventName, eventValue, userId, info, userAgent);
 
-            var message = buildMessage(eventName, eventValue, userId, info, userAgent);
+                sendMessage(message);
 
-            sendMessage(message);
-
-            if (!processorRunning) {
-
-                ExecutingContext.RunProcessor("P", () => { processor(QueueStorage, DataServiceName); });
+                if (!processorRunning)
+                {
+                    ExecutingContext.RunProcessor("P", () => { processor(QueueStorage, DataServiceName); });
+                }
+            }
+            else
+            {
+                Context.LogException(new SmartException(1000, "TraceEvents call with null !"));
             }
         }
 

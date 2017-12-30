@@ -29,6 +29,7 @@ namespace TraceEvents
 			public const string TraceRequest = "TraceRequest";
 			public const string Who = "Who";
 			public const string Root = "Root";
+			public const string TraceQueue = "TraceQueue";
 		}
 
 		public static partial class Relations
@@ -1113,6 +1114,44 @@ namespace TraceEvents
 		public List<Events> Events
 		{
 			get { return this.GetAssociatedInstances<Events, RootEvents>(); }
+		}
+
+	}
+
+	[DataDefinition]
+	public class TraceQueue : Entity, IDataWrapper
+	{
+		public static partial class Fields
+		{
+			public const string Id = "Id";
+			public const string DateCreated = "DateCreated";
+			public const string Info = "Info";
+		}
+
+		void IDataWrapper.InitData(DataRow data, string namePrefix)
+		{
+			base.InitData(data, null);
+		}
+
+		[Data(IsPrimaryKey=true)]
+		public Guid Id
+		{
+			get { return getValue<Guid>("Id"); }
+			set { setValue<Guid>("Id", value); }
+		}
+
+		[Data]
+		public DateTime DateCreated
+		{
+			get { return getValue<DateTime>("DateCreated"); }
+			set { setValue<DateTime>("DateCreated", value); }
+		}
+
+		[Data(DefaultValue = "")]
+		public string Info
+		{
+			get { return getValue<string>("Info"); }
+			set { setValue<string>("Info", value); }
 		}
 
 	}

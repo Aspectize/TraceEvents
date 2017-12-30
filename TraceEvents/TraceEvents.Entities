@@ -148,6 +148,12 @@
         <entityProperty name="Now" type="DateTime" mustPersist="false" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
       </properties>
     </entity>
+    <entity Id="7e736727-b9bc-4746-82eb-8b6539d142dd" name="TraceQueue" guid="54fbc366-3239-428f-b469-13e1ebb4761b" hasCustomValidators="false" hasTriggers="false">
+      <properties>
+        <entityProperty name="DateCreated" type="DateTime" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+        <entityProperty name="Info" defaultValue="&quot;&quot;" identity="false" isEnumType="false" isCompoType="false" isExternType="false" isEnumInBaseType="false" />
+      </properties>
+    </entity>
   </entities>
   <relations>
     <relation Id="a258440a-ca93-4c73-a93a-bc6c5c65f7e1" name="EventsTrace" guid="00000000-0000-0000-0000-000000000000" separateTable="false" hasTriggers="false" hasCustomValidators="false">
