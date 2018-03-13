@@ -17,6 +17,7 @@ namespace TraceMyApps
     public interface ITrace
     {
         void Events(string eventName, string eventValue, string userId, string info);
+        void EventsPast(string eventName, string eventValue, string userId, string info, DateTime dt);
 
         DataSet LoadTraces();
         //DataSet GetTrace(Date dateStart, Date dateEnd);
@@ -372,10 +373,8 @@ namespace TraceMyApps
             q.AddMessageAsync(m);
         }
 
-        string buildMessage(string eventName, string eventValue, string userId, string info, string userAgent)
+        string buildMessage(string eventName, string eventValue, string userId, string info, string userAgent, DateTime dt)
         {
-
-            var dt = DateTime.UtcNow;
 
             var jsonObject = new JObject();
 
@@ -449,7 +448,7 @@ namespace TraceMyApps
             {
                 var userAgent = (HttpContext.Current != null && HttpContext.Current.Request != null) ? HttpContext.Current.Request.UserAgent : String.Empty;
 
-                var message = buildMessage(eventName, eventValue, userId, info, userAgent);
+                var message = buildMessage(eventName, eventValue, userId, info, userAgent, DateTime.UtcNow);
 
                 sendMessage(message);
 
@@ -463,6 +462,28 @@ namespace TraceMyApps
                 Context.LogException(new SmartException(1000, "TraceEvents call with null !"));
             }
         }
+
+        void ITrace.EventsPast(string eventName, string eventValue, string userId, string info, DateTime dt)
+        {
+            if (!string.IsNullOrEmpty(eventName))
+            {
+                var userAgent = (HttpContext.Current != null && HttpContext.Current.Request != null) ? HttpContext.Current.Request.UserAgent : String.Empty;
+
+                var message = buildMessage(eventName, eventValue, userId, info, userAgent, dt);
+
+                sendMessage(message);
+
+                if (!processorRunning)
+                {
+                    ExecutingContext.RunProcessor("P", () => { processor(QueueStorage, DataServiceName); });
+                }
+            }
+            else
+            {
+                Context.LogException(new SmartException(1000, "TraceEvents call with null !"));
+            }
+        }
+
 
         internal static string GetTimeIdFromDate(Guid rootId, Guid eventsId, DateTime dateTime, string extractFormat)
         {
